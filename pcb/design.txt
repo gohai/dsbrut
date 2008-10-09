@@ -1,0 +1,11 @@
+* move drilling at top right a little bit down
+* how to cut the plastic cases?
+
+* ds_bluetooth: mosi/miso pads switched
+* ds_bluetooth: move gnd via somewhere else
+* ds_master/ds_slave: remove one of the headers out?
+* ds_bluetooth: maybe move capacitor down a little bit
+* ds_bluetooth/ds_gig_master: easier solution for getting power while flashing? (bring reset down to nds connector and use this one?)
+* ds_bluetooth: do we really need to isolate the vias below the module? (use finisher?)
+* ds_bluetooth: do we really need all resistors at the top?
+* ds_bluetooth: make big solder pads for rx/tx hooking, and a way to remove the atmega168 from the line (solder bridge?)

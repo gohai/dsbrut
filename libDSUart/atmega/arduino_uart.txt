@@ -1,0 +1,228 @@
+#define VERSION 0x02        // software version (LSB 0..release, 1..devel)
+
+#define SS 10               // PB2
+#define MOSI 11             // PB3
+#define MISO 12             // PB4
+#define SCK 13              // PB5
+
+#define STATE_WAITING 0x00  // waiting for the first part of the header
+#define STATE_HEADERA 0x01  // received first part of the header signature
+#define STATE_HEADERB 0x02  // received second part
+#define STATE_RECEIVE 0x03  // received first byte
+#define STATE_PROC 0x04     // still processing (multi-byte) message
+
+byte state = STATE_WAITING; // current states
+byte msg = 0x00;            // current message type
+
+// array of supported message types
+static const byte supported_msg[] = { 0x01, 0x04, 0x06, 0x10, 0x11, 0x12, 0x40, 0x42 };
+
+
+void setup()
+{
+  byte clr;
+  
+  Serial.begin(57600);
+  Serial.println("Standby..");
+  
+  // setup SPI interface
+  pinMode(SS, INPUT);
+  pinMode(MOSI, INPUT);
+  pinMode(MISO, OUTPUT);
+  pinMode(SCK, INPUT);
+  
+  // enable SPI interface, CPOL=1, CHPA=1
+  SPCR = (1<<6)|(1<<3)|(1<<2);
+  // dummy read
+  clr = SPSR;
+  clr = SPDR;
+}
+
+
+byte spi_transfer(volatile byte out)
+{
+  // send and receive a character, blocking
+  SPDR = out;
+  while (!(SPSR & (1<<7)));
+  return SPDR;
+}
+
+
+void msg_04_setBaud(byte data)
+{
+  // set serial baud rate
+  if (data == 0x01) {
+    Serial.begin(300);
+  } else if (data == 0x02) {
+    Serial.begin(1200);
+  } else if (data == 0x03) {
+    Serial.begin(2400);
+  } else if (data == 0x04) {
+    Serial.begin(4800);
+  } else if (data == 0x05) {
+    Serial.begin(9600);
+  } else if (data == 0x06) {
+    Serial.begin(14400);
+  } else if (data == 0x07) {
+    Serial.begin(19200);
+  } else if (data == 0x08) {
+    Serial.begin(28800);
+  } else if (data == 0x09) {
+    Serial.begin(38400);
+  } else if (data == 0x0A) {
+    Serial.begin(57600);
+  } else if (data == 0x0B) {
+    Serial.begin(115200);
+  }
+}
+
+
+void msg_06_getVersion()
+{
+  // send version back via SPI (NDS sends a dummy byte, so we can ignore this one
+  spi_transfer(0x02);
+}
+
+
+void msg_10_digitalWriteHigh(byte spi_in)
+{
+  // set pin high
+  pinMode(spi_in, OUTPUT);
+  digitalWrite(spi_in, HIGH);
+}
+
+
+void msg_11_digitalWriteLow(byte spi_in)
+{
+  // set pin low
+  pinMode(spi_in, OUTPUT);
+  digitalWrite(spi_in, LOW);
+}
+
+
+void msg_12_analogWrite(byte arg, byte spi_in)
+{
+  // do PWM on a pin
+  pinMode(arg, OUTPUT);
+  analogWrite(arg, spi_in);  
+}
+
+
+void msg_40_digitalRead(byte pin)
+{
+  // read digital pin
+  pinMode(pin, INPUT);
+  // send it back via SPI (NDS sends a dummy byte, so we can ignore this one
+  spi_transfer(digitalRead(pin));
+}
+
+
+void msg_42_analogRead(byte pin)
+{
+  // read analog pin
+  int val = analogRead(pin);
+  // send it back via SPI (NDS sends two dummy bytes)
+  spi_transfer((byte)(val >> 8));
+  spi_transfer((byte)(val & 0xFF));
+}
+
+
+// GH: I really don't know why this doesn't work when declared inside loop()
+byte arg;    // this is the first byte of a message
+
+void loop()
+{
+  byte spi_in;
+
+  if (Serial.available() > 0) {
+    spi_in = spi_transfer(Serial.read());
+  } else {
+    spi_in = spi_transfer(0x00);
+  }
+  
+  if (state == STATE_PROC) {
+    // processing data (multi-byte messgae)
+    if (msg == 0x01) {
+      // message type: 0x01: send string
+      // GH: we sometimes get NULL bytes here when sending too fast
+      Serial.print(spi_in, BYTE);
+      if (--arg == 0) {
+        state = STATE_WAITING;
+        // DEBUG
+        //Serial.print("[done]");
+      }
+    } else if (msg == 0x12) {
+      // message type 0x12: pwm
+      msg_12_analogWrite(arg, spi_in);
+      state = STATE_WAITING;
+    }
+  } else if (state == STATE_RECEIVE) {
+    // receiving data
+    if (msg == 0x01) {
+      // message type 0x01: send string
+      arg = spi_in;
+      state = STATE_PROC;
+      // DEBUG
+      //Serial.print("[len: ");
+      //Serial.print(len, DEC);
+      //Serial.print("]");
+    } else if (msg == 0x04) {
+      // message type 0x04: set serial baud rate
+      msg_04_setBaud(spi_in);
+      state = STATE_WAITING;
+      // DEBUG
+      //Serial.print("[msg ");
+      //Serial.print(msg, HEX);
+      //Serial.print(": ");
+      //Serial.print(spi_in, HEX);
+      //Serial.print("]");
+    } else if (msg == 0x06) {
+      // message type: 0x06: get software version
+      msg_06_getVersion();
+      state = STATE_WAITING;
+    } else if (msg == 0x10) {
+      // message type 0x10: set pin high
+      msg_10_digitalWriteHigh(spi_in);
+      state = STATE_WAITING;
+    } else if (msg == 0x11) {
+      // message type 0x11: set pin low
+      msg_11_digitalWriteLow(spi_in);
+      state = STATE_WAITING;
+    } else if (msg == 0x12) {
+      // message type 0x12: pwm
+      arg = spi_in;
+      state = STATE_PROC;
+    } else if (msg == 0x40) {
+      // message type 0x40: read digital pin
+      msg_40_digitalRead(spi_in);
+      state = STATE_WAITING;
+    } else if (msg == 0x42) {
+      // message type 0x42: read analog pin
+      msg_42_analogRead(spi_in);
+      state = STATE_WAITING;
+    }
+  } else if (state == STATE_WAITING && spi_in == 0x05) {
+    // received first part of header signature
+    state = STATE_HEADERA;
+  } else if (state == STATE_HEADERA && spi_in == 0x02) {
+    // received second part of header signature
+    state = STATE_HEADERB;
+  } else if (state == STATE_HEADERA) {
+    // received illegal second part of header, go back to waiting state
+    state = STATE_WAITING;
+  } else if (state == STATE_HEADERB) {
+    // check if we received a supported message, go back to waiting state instead
+    state = STATE_WAITING;
+    for (byte i=0; i<sizeof(supported_msg); i++) {
+     if (spi_in == supported_msg[i]) {
+       state = STATE_RECEIVE;
+       msg = spi_in;
+       // DEBUG
+       //Serial.print("[msg: ");
+       //Serial.print(msg, HEX);
+       //Serial.print("]");
+       break;
+     }
+    }
+  }
+}
