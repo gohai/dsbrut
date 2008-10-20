@@ -18,6 +18,7 @@
  */
 
 #include <nds.h>
+#include <stdlib.h>
 #include <string.h>
 #include "uart.h"
 #include "spi.h"
@@ -29,9 +30,9 @@
 // internal functions
 static void checkInBuffer();
 static bool outTraceDone();
-static void setOutTrace(uint8_t len, uint8_t *dest);
+static void setOutTrace(uint8_t len, uint8_t *dest, bool waitForIrq);
 //static void uartIrqCard();
-//static void uartIrqCardLine();
+static void uartIrqCardLine();
 static void uartIrqTimer();
 static bool uartPutRaw(const uint8_t *buffer, size_t size);
 static void uartUpdate();
@@ -44,6 +45,7 @@ char outBuffer[255];
 uint8_t outBufferSize = 0;
 uint8_t outBufferHead = 0;
 uint8_t *outTraceDest = NULL;		// set to destination buffer when tracing
+bool outTraceIrq = false;			// wait for Card Line interrupt if true
 short outTraceStart = 0;
 short outTraceStop = 0;
 uint8_t timer = 0xff;				// timer to use
@@ -62,10 +64,11 @@ static void checkInBuffer()
 }
 
 
-static void setOutTrace(uint8_t len, uint8_t *dest)
+static void setOutTrace(uint8_t len, uint8_t *dest, bool waitForIrq)
 {
 	// set output tracing
 	outTraceDest = dest;
+	outTraceIrq = waitForIrq;
 	outTraceStart = outBufferSize-outBufferHead-len+1;
 	outTraceStop = outBufferSize-outBufferHead;
 }	
@@ -76,6 +79,7 @@ static bool outTraceDone()
 	// check if output tracing is done (bytes received ended up in outTraceDest)
 	if (outTraceDest && outTraceStop <= 0) {
 		outTraceDest = NULL;
+		outTraceIrq = false;
 		return true;
 	} else {
 		return false;
@@ -90,12 +94,19 @@ static bool outTraceDone()
 //}
 
 
-//static void uartIrqCardLine()
-//{
+static void uartIrqCardLine()
+{
 //	// DEBUG
 //	iprintf("received an SPI card line IRQ\n");
 //	// we might want to have a callback function here..
-//}
+
+	// we re-enable the timer interrupt here
+	// TODO: not sure if we need to sleep here (swiDelay())
+	if (timer != 0xff) {
+		irqEnable(BIT(timer+3));
+		TIMER_CR(timer) = TIMER_ENABLE | TIMER_DIV_1024 | TIMER_IRQ_REQ;
+	}
+}
 
 
 static void uartIrqTimer()
@@ -132,6 +143,12 @@ static void uartUpdate()
 		if (outTraceStart <= 0 && 0 <= outTraceStop) {
 			outTraceDest[0-outTraceStart] = in;
 		}
+		// stop timer here when we are tracing and want to wait for an Card Line interrupt (EXPERIMENTAL)
+		if (outTraceIrq && outTraceStart == 1) {
+			TIMER_CR(timer) &= ~TIMER_ENABLE;
+			irqDisable(BIT(timer+3));
+		}
+		// TODO: not sure if we don't eat to many characters here
 		return;
 	}
 	
@@ -170,8 +187,8 @@ bool uartOpen()
 	// setup interrupts
 	//irqSet(IRQ_CARD, uartIrqCard);
 	//irqEnable(IRQ_CARD);
-	//irqSet(IRQ_CARD_LINE, uartIrqCardLine);
-	//irqEnable(IRQ_CARD_LINE);
+	irqSet(IRQ_CARD_LINE, uartIrqCardLine);
+	irqEnable(IRQ_CARD_LINE);
 	
 	// look for available timer
 	// TODO: make the timer on demand, 3->0
@@ -402,7 +419,7 @@ bool uartDigitalRead(uint8_t pin)
 	}
 	
 	// read in one byte
-	setOutTrace(1, &ret);
+	setOutTrace(1, &ret, false);
 	while (!outTraceDone()) {
 		swiIntrWait(0, BIT(timer+3));
 	}
@@ -440,7 +457,7 @@ unsigned short uartAnalogRead(uint8_t pin)
 	}
 	
 	// read in two bytes
-	setOutTrace(2, ret);
+	setOutTrace(2, ret, false);
 	while (!outTraceDone()) {
 		swiIntrWait(0, BIT(timer+3));
 	}
@@ -454,6 +471,80 @@ unsigned short uartAnalogRead(uint8_t pin)
 }
 
 
+uint8_t uartI2CSend(uint8_t addr, const uint8_t *data, size_t size)
+{
+	uint8_t *msg = (uint8_t*)malloc(5+size+1);
+	uint8_t ret;
+	
+	if (!msg)
+		return 0xff;	// error: out of memory
+	msg[0] = 0x05;
+	msg[1] = 0x02;
+	msg[2] = 0x44;
+	msg[3] = addr;		// destination address
+	msg[4] = size;		// payload size
+	memcpy(&msg[5], data, size);
+	// final byte is dummy byte
+	
+	while (!uartPutRaw(msg, 5+size+1)) {
+		swiIntrWait(0, BIT(timer+3));
+	}
+	
+	// read in one byte
+	setOutTrace(1, &ret, true);
+	while (!outTraceDone()) {
+		swiIntrWait(0, BIT(timer+3)|IRQ_CARD_LINE);
+	}
+	
+	free(msg);
+	return ret;
+}
+
+
+uint8_t uartI2CReceive(uint8_t addr, uint8_t *buffer, size_t size)
+{
+	uint8_t *msg = (uint8_t*)malloc(5+size+1);
+	uint8_t *ret = (uint8_t*)malloc(size+1);
+	
+	if (!msg || !ret) {
+		free(msg);
+		free(ret);
+		return 0;		// error: out of memory
+	}
+	msg[0] = 0x05;
+	msg[1] = 0x02;
+	msg[2] = 0x46;
+	msg[3] = addr;
+	msg[4] = size;
+	// all other ones are dummy bytes
+	
+	while (!uartPutRaw(msg, 5+size+1)) {
+		swiIntrWait(0, BIT(timer+3));
+	}
+	
+	// read in response
+	setOutTrace(size+1, ret, true);
+	while (!outTraceDone()) {
+		swiIntrWait(0, BIT(timer+3)|IRQ_CARD_LINE);
+	}
+	
+	// actual payload size is returned in the first byte
+	if (ret[0] > size) {
+		free(msg);
+		free(ret);
+		return 0;		// error: invalid size returned
+	}
+	
+	// copy payload to buffer
+	memcpy(buffer, &ret[1], ret[0]);
+	size = ret[0];
+	
+	free(msg);
+	free(ret);
+	return size;		// return actual payload size
+}
+
+
 uint8_t uartSoftwareVersion()
 {
 	uint8_t msg[] = { 0x05, 0x02, 0x06, 0x00, 0x00 };
@@ -464,7 +555,7 @@ uint8_t uartSoftwareVersion()
 	}
 	
 	// read in a byte
-	setOutTrace(1, &ret);
+	setOutTrace(1, &ret, false);
 	while (!outTraceDone()) {
 		swiIntrWait(0, BIT(timer+3));
 	}

@@ -31,6 +31,14 @@ Message Type: 0x06 (READ SOFTWARE VERSION)
 	0xXX		return: version number
 			least significant bit 0..release, 1..devel
 
+Message Type: 0x07 (RAISE CARD LINE IRQ)
+*** added for firmware version 0x04 ***
+  0x05		magic value
+  0x02		magic value
+  0x07		message type
+  0x00		dummy byte
+	IRQ		Card Line interrupt (low/high/low transition on PB6)
+
 Message Type: 0x10 (SET PIN HIGH)
   0x05		magic value
   0x02		magic value
@@ -67,3 +75,28 @@ Message Type: 0x42 (READ ANALOG PIN)
 	0xXX		return: MSB
   0x00		dummy byte
 	0xXX		return: LSB
+
+Message Type: 0x44 (SEND I2C)
+*** added for firmware version 0x04 ***
+  0x05		magic value
+  0x02		magic value
+  0x44		message type
+  0xXX		i2c destination address (lower 7 bits)
+  0xXX		payload length
+  n		number of payload bytes
+	IRQ		Card Line interrupt (low/high/low transition on PB6)
+  0x00		dummy byte
+	0xXX		return: result (see Wire.endTransmission())
+
+Message Type: 0x46 (RECEIVE I2C)
+*** added for firmware version 0x04 ***
+  0x05		magic value
+  0x02		magic value
+  0x46		message type
+  0xXX		i2c source address (lower 7 bits)
+  0xXX		expected payload length
+	IRQ		Card Line interrupt (low/high/low transition on PB6)
+  0x00		dummy byte
+	0xXX		return: actual payload length
+  n		dummy bytes
+	n		return: payload (actual payload and padded with zero bytes until expected payload length)

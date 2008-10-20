@@ -1,4 +1,6 @@
-#define VERSION 0x02        // software version (LSB 0..release, 1..devel)
+#include <Wire.h>           // needs Arduino version 0012 Alpha
+
+#define VERSION 0x04        // software version (LSB 0..release, 1..devel)
 
 #define SS 10               // PB2
 #define MOSI 11             // PB3
@@ -10,12 +12,14 @@
 #define STATE_HEADERB 0x02  // received second part
 #define STATE_RECEIVE 0x03  // received first byte
 #define STATE_PROC 0x04     // still processing (multi-byte) message
+#define STATE_PROC_B 0x05   // second state for multi-byte messages
 
 byte state = STATE_WAITING; // current states
 byte msg = 0x00;            // current message type
+boolean i2c_enabled = false;  // already joined i2c bus
 
 // array of supported message types
-static const byte supported_msg[] = { 0x01, 0x04, 0x06, 0x10, 0x11, 0x12, 0x40, 0x42 };
+static const byte supported_msg[] = { 0x01, 0x04, 0x06, 0x07, 0x10, 0x11, 0x12, 0x40, 0x42, 0x44, 0x46 };
 
 
 void setup()
@@ -36,6 +40,16 @@ void setup()
   // dummy read
   clr = SPSR;
   clr = SPDR;
+}
+
+
+void do_irq()
+{
+  // raise a Card Line hardware interrupt (PB6)
+  DDRB |= (1 << 6);
+  PORTB &= ~(1 << 6);    // low
+  PORTB |= (1 << 6);     // high
+  PORTB &= ~(1 << 6);    // low  
 }
 
 
@@ -80,7 +94,13 @@ void msg_04_setBaud(byte data)
 void msg_06_getVersion()
 {
   // send version back via SPI (NDS sends a dummy byte, so we can ignore this one
-  spi_transfer(0x02);
+  spi_transfer(VERSION);
+}
+
+
+void msg_07_raiseIrq()
+{
+  do_irq();  
 }
 
 
@@ -140,10 +160,25 @@ void loop()
     spi_in = spi_transfer(0x00);
   }
   
-  if (state == STATE_PROC) {
+  if (state == STATE_PROC_B) {
+    // still processing data (multi-byte message)
+    if (msg == 0x44) {
+      // message type 0x44: send i2c
+      if (--arg == 0) {
+        Wire.send(spi_in);
+        spi_in = Wire.endTransmission();
+        // irq to wake nds up
+        do_irq();
+        spi_transfer(spi_in);
+        state = STATE_WAITING;
+      } else {
+        Wire.send(spi_in);
+      } 
+    }
+  } else if (state == STATE_PROC) {
     // processing data (multi-byte messgae)
     if (msg == 0x01) {
-      // message type: 0x01: send string
+      // message type 0x01: send string
       // GH: we sometimes get NULL bytes here when sending too fast
       Serial.print(spi_in, BYTE);
       if (--arg == 0) {
@@ -154,6 +189,26 @@ void loop()
     } else if (msg == 0x12) {
       // message type 0x12: pwm
       msg_12_analogWrite(arg, spi_in);
+      state = STATE_WAITING;
+    } else if (msg == 0x44) {
+      // message type 0x44: send i2c
+      arg = spi_in;
+      state = STATE_PROC_B;
+    } else if (msg == 0x46) {
+      // message type 0x46: receive i2c
+      arg = Wire.requestFrom(arg, spi_in);
+      // irq to wake nds up
+      do_irq();
+      spi_transfer(arg);
+      while (Wire.available()) {
+       spi_transfer(Wire.receive()),
+       spi_in--;
+      }
+      while (spi_in > 0) {
+       // send dummy bytes
+       spi_transfer(0x00);
+       spi_in--; 
+      }
       state = STATE_WAITING;
     }
   } else if (state == STATE_RECEIVE) {
@@ -177,8 +232,12 @@ void loop()
       //Serial.print(spi_in, HEX);
       //Serial.print("]");
     } else if (msg == 0x06) {
-      // message type: 0x06: get software version
+      // message type 0x06: get software version
       msg_06_getVersion();
+      state = STATE_WAITING;
+    } else if (msg == 0x07) {
+      // message type 0x07: raise Card Line irq
+      msg_07_raiseIrq();
       state = STATE_WAITING;
     } else if (msg == 0x10) {
       // message type 0x10: set pin high
@@ -200,6 +259,24 @@ void loop()
       // message type 0x42: read analog pin
       msg_42_analogRead(spi_in);
       state = STATE_WAITING;
+    } else if (msg == 0x44) {
+      // message type 0x44: send i2c
+      if (!i2c_enabled) {
+        // join the i2c bus as master
+        Wire.begin();
+        i2c_enabled = true;
+      }
+      Wire.beginTransmission(spi_in);
+      state = STATE_PROC;
+    } else if (msg == 0x46) {
+      // message type: 0x46: receive i2c
+      if (!i2c_enabled) {
+        // join the i2c bus as master
+        Wire.begin();
+        i2c_enabled = true;
+      }
+      arg = spi_in;
+      state = STATE_PROC;
     }
   } else if (state == STATE_WAITING && spi_in == 0x05) {
     // received first part of header signature

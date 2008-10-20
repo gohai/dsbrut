@@ -127,7 +127,7 @@ bool uartSetBaud(unsigned int bps);
  *                            *
  ******************************/
  
-// available pins (on DS GIG Master at least :)
+// available pins
 // left to right
 #define PC5 19
 #define PC4 18
@@ -173,6 +173,39 @@ void uartAnalogWrite(uint8_t pin, uint8_t val);
  *	@return				value (0..1023)
  */
 unsigned short uartAnalogRead(uint8_t pin);
+
+/**
+ *	send data over the i2c bus.
+ *
+ *	Use PC4 as SDA and PC5 as SCL line.
+ *	The device joins the i2c bus as master. addr has the destination address 
+ *	in the lower 7 bits. Internally, they are being left shifted and the read/write 
+ *	bit appended, like on Arduino.
+ *	@param addr			destination address (slave)
+ *	@param data			data to send
+ *	@param size			length of data in bytes
+ *	@retval 0			success
+ *	@retval 1			size to long for (Atmega168) buffer
+ *	@retval 2			address send, NACK received
+ *	@retval 3			data send, NACK received
+ *	@retval	4			other i2c error (lost bus arbitration, bus error, ..)
+ *	@retval 255			out of memory
+ */
+uint8_t uartI2CSend(uint8_t addr, const uint8_t *data, size_t size);
+
+/**
+ *	receive data over the i2c bus.
+ *
+ *	Use PC4 as SDA and PC5 as SCL line.
+ *	The device joins the i2c bus as master. addr has the destination address 
+ *	in the lower 7 bits. Internally, they are being left shifted and the read/write 
+ *	bit appended, like on Arduino.
+ *	@param addr			source address (slave)
+ *	@param buffer		buffer to fill
+ *	@param size			length of buffer in bytes
+ *	@return				number of bytes received
+ */
+uint8_t uartI2CReceive(uint8_t addr, uint8_t *buffer, size_t size);
 
 
 
