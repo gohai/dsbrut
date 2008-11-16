@@ -67,7 +67,6 @@ int main(void)
 
 	while(true) {
 
-		char c;
 		uint32 pressed;
 		
 		scanKeys();
@@ -110,12 +109,8 @@ int main(void)
 			iprintf("\n\n\tatmega software version: 0x%02x", uartSoftwareVersion());
 		}
 		
-		if (uartAvailable()) {
-			c = uartGetChar();
-			// HACK to filter the 0xffs at ATMEGA startup
-			if (c != 0xff)
-				iprintf("%c", uartGetChar());
-		}
+		if (uartAvailable())
+			iprintf("%c", uartGetChar());
 		
 		swiWaitForVBlank();
 		

@@ -7,6 +7,10 @@
  *
  *	This function opens the IRQ_CARD_LINE interrupt and registers 
  *	the first available timer. irqInit() must be called before uartOpen().
+ *	This function blocks until a connection with the cartridge has been 
+ *	established. (thus a great place to swap cartridges)
+ *	@return				false if already open or no timer interrupt could 
+ *						be assigned
  */
 bool uartOpen();
 
@@ -19,7 +23,7 @@ bool uartOpen();
  *	@param size			size of buffer in bytes
  *	@return				number of bytes copied
  */
-unsigned int uartGet(uint8_t *buffer, size_t size);
+uint32 uartGet(uint8 *buffer, size_t size);
 
 /**
  *	receive characters from the device and put it in a string.
@@ -29,7 +33,7 @@ unsigned int uartGet(uint8_t *buffer, size_t size);
  *	@param size			size of buffer in bytes
  *	@return				number of characters in string (excluding terminating NULL)
  */
-unsigned int uartGetStr(char *buffer, size_t size);
+uint32 uartGetStr(char *buffer, size_t size);
 
 /**
  *	receive a line from the device and put it in a string.
@@ -41,7 +45,7 @@ unsigned int uartGetStr(char *buffer, size_t size);
  *	@param size			size of buffer in bytes
  *	@return				number of characters in string (excluding terminating NULL)
  */
-unsigned int uartGetLn(char *buffer, size_t size);
+uint32 uartGetLn(char *buffer, size_t size);
 
 /**
  *	read a character from the device.
@@ -61,7 +65,7 @@ char uartGetChar();
  *	@param size			number of bytes to send
  *	@return				number of bytes sent
  */
-unsigned int uartPut(const uint8_t *buffer, size_t size);
+uint32 uartPut(const uint8 *buffer, size_t size);
 
 /**
  *	write a string to the device.
@@ -69,7 +73,7 @@ unsigned int uartPut(const uint8_t *buffer, size_t size);
  *	@param string		NULL-terminated string
  *	@return				number of bytes sent
  */
-unsigned int uartPutStr(const char *string);
+uint32 uartPutStr(const char *string);
 
 /**
  *	write a character to the device.
@@ -86,7 +90,7 @@ bool uartPutChar(char c);
  *
  *	@return				number of available bytes
  */
-unsigned int uartAvailable();
+uint32 uartAvailable();
 
 /**
  *	clear the input buffer.
@@ -117,7 +121,7 @@ void uartSetNewlineChar(char c);
  *	@return				true if successful, false if not (unsupported baud rate or output 
  *						buffer full)
  */
-bool uartSetBaud(unsigned int bps);
+bool uartSetBaud(uint32 bps);
 
 
 
@@ -148,7 +152,7 @@ bool uartSetBaud(unsigned int bps);
  *	@param pin			pin on ATMEGA168
  *	@param high			HIGH or LOW
  */
-void uartDigitalWrite(uint8_t pin, bool high);
+void uartDigitalWrite(uint8 pin, bool high);
 
 /**
  *	read the value of a pin.
@@ -156,7 +160,7 @@ void uartDigitalWrite(uint8_t pin, bool high);
  *	@param pin			pin on ATMEGA168
  *	@return				HIGH (true) or LOW (false)
  */
-bool uartDigitalRead(uint8_t pin);
+bool uartDigitalRead(uint8 pin);
 
 /**
  *	writes a PWM value to a pin.
@@ -164,7 +168,7 @@ bool uartDigitalRead(uint8_t pin);
  *	@param pin			pin on ATMEGA168 (works with PD3, PD6, PD5)
  *	@param val			value (0-255)
  */
-void uartAnalogWrite(uint8_t pin, uint8_t val);
+void uartAnalogWrite(uint8 pin, uint8 val);
 
 /**
  *	read the value of an analog pin.
@@ -172,7 +176,7 @@ void uartAnalogWrite(uint8_t pin, uint8_t val);
  *	@param pin			pin on ATMEGA168 (works with PC5, PC4; PC3 on Uart only)
  *	@return				value (0..1023)
  */
-unsigned short uartAnalogRead(uint8_t pin);
+uint16 uartAnalogRead(uint8 pin);
 
 /**
  *	send data over the i2c bus.
@@ -191,7 +195,7 @@ unsigned short uartAnalogRead(uint8_t pin);
  *	@retval	4			other i2c error (lost bus arbitration, bus error, ..)
  *	@retval 255			out of memory
  */
-uint8_t uartI2CSend(uint8_t addr, const uint8_t *data, size_t size);
+uint8 uartI2CSend(uint8 addr, const uint8 *data, size_t size);
 
 /**
  *	receive data over the i2c bus.
@@ -205,7 +209,7 @@ uint8_t uartI2CSend(uint8_t addr, const uint8_t *data, size_t size);
  *	@param size			length of buffer in bytes
  *	@return				number of bytes received
  */
-uint8_t uartI2CReceive(uint8_t addr, uint8_t *buffer, size_t size);
+uint8 uartI2CReceive(uint8 addr, uint8 *buffer, size_t size);
 
 
 
@@ -214,7 +218,7 @@ uint8_t uartI2CReceive(uint8_t addr, uint8_t *buffer, size_t size);
  *
  *	@return				version number (least significant bit 0..release, 1..devel)
  */
-uint8_t uartSoftwareVersion();
+uint8 uartSoftwareVersion();
 
 
 

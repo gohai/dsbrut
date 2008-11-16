@@ -30,28 +30,28 @@
 // internal functions
 static void checkInBuffer();
 static bool outTraceDone();
-static void setOutTrace(uint8_t len, uint8_t *dest, bool waitForIrq);
+static void setOutTrace(uint8 len, uint8 *dest, bool waitForIrq);
 //static void uartIrqCard();
 static void uartIrqCardLine();
 static void uartIrqTimer();
-static bool uartPutRaw(const uint8_t *buffer, size_t size);
+static bool uartPutRaw(const uint8 *buffer, size_t size);
 static void uartUpdate();
 
-char inBuffer[255];
-uint8_t inBufferSize = 0;			// number of characters in incoming buffer
-uint8_t inBufferHead = 0;			// index of next character to read
-char newlineChar = '\n';			// newline character
-char outBuffer[255];
-uint8_t outBufferSize = 0;
-uint8_t outBufferHead = 0;
-uint8_t *outTraceDest = NULL;		// set to destination buffer when tracing
-bool outTraceIrq = false;			// wait for Card Line interrupt if true
-short outTraceStart = 0;
-short outTraceStop = 0;
-uint8_t timer = 0xff;				// timer to use
+uint8 inBuffer[255];
+uint8 inBufferSize = 0;			// number of characters in incoming buffer
+uint8 inBufferHead = 0;			// index of next character to read
+char newlineChar = '\n';		// newline character
+uint8 outBuffer[255];
+uint8 outBufferSize = 0;
+uint8 outBufferHead = 0;
+uint8 *outTraceDest = NULL;		// set to destination buffer when tracing
+bool outTraceIrq = false;		// wait for Card Line interrupt if true
+int16 outTraceStart = 0;
+int16 outTraceStop = 0;
+uint8 timer = 0xff;				// timer to use
 
 // for msg 0x04
-static const unsigned int uartSpeeds[] = { 300, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200 };
+static const uint32 uartSpeeds[] = { 300, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200 };
 
 
 static void checkInBuffer()
@@ -64,7 +64,7 @@ static void checkInBuffer()
 }
 
 
-static void setOutTrace(uint8_t len, uint8_t *dest, bool waitForIrq)
+static void setOutTrace(uint8 len, uint8 *dest, bool waitForIrq)
 {
 	// set output tracing
 	outTraceDest = dest;
@@ -118,7 +118,7 @@ static void uartIrqTimer()
 
 static void uartUpdate()
 {
-	uint8_t in;
+	uint8 in;
 	
 	if (outBufferHead < outBufferSize) {
 		writeBlocking_cardSPI(outBuffer[outBufferHead]);
@@ -169,7 +169,7 @@ static void uartUpdate()
 
 bool uartOpen()
 {
-	uint8_t i;
+	uint8 i;
 	
 	// check if uart is already open
 	if (timer != 0xff)
@@ -209,13 +209,19 @@ bool uartOpen()
 	}
 
 	config_cardSPI(UART_SPI_SPEED, 1);
+	
+	// wait for card to become ready
+	do {
+		i = uartSoftwareVersion();
+	} while (i == 0x00 || i == 0xff);
+	
 	return true;
 }
 
 
-unsigned int uartGet(uint8_t *buffer, size_t size)
+uint32 uartGet(uint8 *buffer, size_t size)
 {
-	unsigned int i;
+	uint32 i;
 	
 	if (size > inBufferSize-inBufferHead)
 		size = inBufferSize-inBufferHead;
@@ -231,20 +237,20 @@ unsigned int uartGet(uint8_t *buffer, size_t size)
 }
 
 
-unsigned int uartGetStr(char *buffer, size_t size)
+uint32 uartGetStr(char *buffer, size_t size)
 {
-	unsigned int ret;
+	uint32 ret;
 	
-	ret = uartGet((uint8_t*)buffer, size-1);
+	ret = uartGet((uint8*)buffer, size-1);
 	buffer[ret] = '\0';
 	
 	return ret;
 }
 
 
-unsigned int uartGetLn(char *buffer, size_t size)
+uint32 uartGetLn(char *buffer, size_t size)
 {
-	unsigned int i;
+	uint32 i;
 	
 	if (size > inBufferSize-inBufferHead)
 		size = inBufferSize-inBufferHead;
@@ -287,9 +293,9 @@ char uartGetChar()
 }
 
 
-unsigned int uartPut(const uint8_t *buffer, size_t size)
+uint32 uartPut(const uint8 *buffer, size_t size)
 {
-	unsigned int i;
+	uint32 i;
 	
 	if (size > sizeof(outBuffer)-outBufferSize-4)
 		size = sizeof(outBuffer)-outBufferSize-4;
@@ -309,9 +315,9 @@ unsigned int uartPut(const uint8_t *buffer, size_t size)
 }
 
 
-bool uartPutRaw(const uint8_t *buffer, size_t size)
+bool uartPutRaw(const uint8 *buffer, size_t size)
 {
-	unsigned int i;
+	uint32 i;
 	
 	if (size > sizeof(outBuffer)-outBufferSize)
 		return false;
@@ -325,9 +331,9 @@ bool uartPutRaw(const uint8_t *buffer, size_t size)
 }
 
 
-unsigned int uartPutStr(const char *string)
+uint32 uartPutStr(const char *string)
 {
-	return uartPut((const uint8_t*)string, strlen(string));
+	return uartPut((const uint8*)string, strlen(string));
 }
 
 
@@ -339,7 +345,7 @@ bool uartPutChar(char c)
 		outBuffer[outBufferSize+1] = 0x02;
 		outBuffer[outBufferSize+2] = 0x01;
 		outBuffer[outBufferSize+3] = 1;
-		outBuffer[outBufferSize+4] = (uint8_t)c;
+		outBuffer[outBufferSize+4] = (uint8)c;
 		outBufferSize += 5;
 		return true;
 	} else {
@@ -348,7 +354,7 @@ bool uartPutChar(char c)
 }
 
 
-unsigned int uartAvailable()
+uint32 uartAvailable()
 {
 	return inBufferSize-inBufferHead;
 }
@@ -375,14 +381,14 @@ void uartSetNewlineChar(char c)
 }
 
 
-bool uartSetBaud(unsigned int bps)
+bool uartSetBaud(uint32 bps)
 {
-	unsigned int i;
-	uint8_t msg[] = { 0x05, 0x02, 0x04, 0x00 };
+	uint32 i;
+	uint8 msg[] = { 0x05, 0x02, 0x04, 0x00 };
 	
 	for (i=0; i<sizeof(uartSpeeds); i++) {
 		if (bps == uartSpeeds[i]) {
-			msg[3] = (uint8_t)(i+1);
+			msg[3] = (uint8)(i+1);
 			while (!uartPutRaw(msg, 4)) {
 				swiIntrWait(0, BIT(timer+3));
 			}
@@ -393,9 +399,9 @@ bool uartSetBaud(unsigned int bps)
 }
 
 
-void uartDigitalWrite(uint8_t pin, bool high)
+void uartDigitalWrite(uint8 pin, bool high)
 {
-	uint8_t msg[] = { 0x05, 0x02, 0x00, 0x00 };
+	uint8 msg[] = { 0x05, 0x02, 0x00, 0x00 };
 
 	if (high)
 		msg[2] = 0x10;
@@ -409,10 +415,10 @@ void uartDigitalWrite(uint8_t pin, bool high)
 }
 
 
-bool uartDigitalRead(uint8_t pin)
+bool uartDigitalRead(uint8 pin)
 {
-	uint8_t msg[] = { 0x05, 0x02, 0x40, pin, 0x02 };
-	uint8_t ret;
+	uint8 msg[] = { 0x05, 0x02, 0x40, pin, 0x02 };
+	uint8 ret;
 	
 	while(!uartPutRaw(msg, 5)) {
 		swiIntrWait(0, BIT(timer+3));
@@ -428,9 +434,9 @@ bool uartDigitalRead(uint8_t pin)
 }
 
 
-void uartAnalogWrite(uint8_t pin, uint8_t val)
+void uartAnalogWrite(uint8 pin, uint8 val)
 {
-	uint8_t msg[] = { 0x05, 0x02, 0x12, pin, val };
+	uint8 msg[] = { 0x05, 0x02, 0x12, pin, val };
 
 	while(!uartPutRaw(msg, 5)) {
 		swiIntrWait(0, BIT(timer+3));
@@ -438,11 +444,11 @@ void uartAnalogWrite(uint8_t pin, uint8_t val)
 }
 
 
-unsigned short uartAnalogRead(uint8_t pin)
+uint16 uartAnalogRead(uint8 pin)
 {
-	uint8_t msg[] = { 0x05, 0x02, 0x42, pin, 0x00, 0x00 };
-	uint8_t ret[2];
-	uint8_t tmp;
+	uint8 msg[] = { 0x05, 0x02, 0x42, pin, 0x00, 0x00 };
+	uint8 ret[2];
+	uint8 tmp;
 	
 	// fix pin mapping
 	if (pin == PC5)
@@ -467,14 +473,14 @@ unsigned short uartAnalogRead(uint8_t pin)
 	ret[0] = ret[1];
 	ret[1] = tmp;
 	
-	return *((unsigned short*)ret);
+	return *((uint16*)ret);
 }
 
 
-uint8_t uartI2CSend(uint8_t addr, const uint8_t *data, size_t size)
+uint8 uartI2CSend(uint8 addr, const uint8 *data, size_t size)
 {
-	uint8_t *msg = (uint8_t*)malloc(5+size+1);
-	uint8_t ret;
+	uint8 *msg = (uint8*)malloc(5+size+1);
+	uint8 ret;
 	
 	if (!msg)
 		return 0xff;	// error: out of memory
@@ -501,10 +507,10 @@ uint8_t uartI2CSend(uint8_t addr, const uint8_t *data, size_t size)
 }
 
 
-uint8_t uartI2CReceive(uint8_t addr, uint8_t *buffer, size_t size)
+uint8 uartI2CReceive(uint8 addr, uint8 *buffer, size_t size)
 {
-	uint8_t *msg = (uint8_t*)malloc(5+size+1);
-	uint8_t *ret = (uint8_t*)malloc(size+1);
+	uint8 *msg = (uint8*)malloc(5+size+1);
+	uint8 *ret = (uint8*)malloc(size+1);
 	
 	if (!msg || !ret) {
 		free(msg);
@@ -545,10 +551,10 @@ uint8_t uartI2CReceive(uint8_t addr, uint8_t *buffer, size_t size)
 }
 
 
-uint8_t uartSoftwareVersion()
+uint8 uartSoftwareVersion()
 {
-	uint8_t msg[] = { 0x05, 0x02, 0x06, 0x00, 0x00 };
-	uint8_t ret;
+	uint8 msg[] = { 0x05, 0x02, 0x06, 0x00, 0x00 };
+	uint8 ret;
 	
 	while (!uartPutRaw(msg, 5)) {
 		swiIntrWait(0, BIT(timer+3));
