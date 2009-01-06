@@ -1,0 +1,18 @@
+diff -ur lilypad_orig/src/ATmegaBOOT.c lilypad/src/ATmegaBOOT.c
+--- lilypad_orig/src/ATmegaBOOT.c	Sun Sep 21 18:52:44 2008
++++ lilypad/src/ATmegaBOOT.c	Thu Jan  1 19:13:26 2009
+@@ -251,7 +251,13 @@
+     uint8_t ch,ch2;
+     uint16_t w;
+ 
+-    asm volatile("nop\n\t");
++	// GH: clear Watchdog System Reset flag
++	MCUSR &= ~_BV(WDRF);
++	WDTCSR |= _BV(WDCE) | _BV(WDE);
++	// GH: turn off watchdog
++	WDTCSR = 0;
++	// GH: was here before
++	//asm volatile("nop\n\t");
+ 
+     /* set pin direction for bootloader pin and enable pullup */
+     /* for ATmega128, two pins need to be initialized */
