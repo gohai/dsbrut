@@ -49,6 +49,39 @@ byte spi_transfer(volatile byte out)
 }
 
 
+void cmd_set_bps()
+{
+  // TODO: test
+  byte spi_in;
+
+  // read bps index
+  spi_in = spi_transfer(0x00);
+  if (spi_in == 0) {
+    Serial.begin(300);
+  } else if (spi_in == 1) {
+    Serial.begin(1200);
+  } else if (spi_in == 2) {
+    Serial.begin(2400);
+  } else if (spi_in == 3) {
+    Serial.begin(4800);
+  } else if (spi_in == 4) {
+    Serial.begin(9600);
+  } else if (spi_in == 5) {
+    Serial.begin(14400);
+  } else if (spi_in == 6) {
+    Serial.begin(19200);
+  } else if (spi_in == 7) {
+    Serial.begin(28800);
+  } else if (spi_in == 8) {
+    Serial.begin(38400);
+  } else if (spi_in == 9) {
+    Serial.begin(57600);
+  } else if (spi_in == 10) {
+    Serial.begin(115200);
+  }
+}
+
+
 void loop()
 {
   byte serial_in;
@@ -83,6 +116,9 @@ void loop()
   if (got_esc) {
     got_esc = false;
     // handle escape characters
+    if (spi_in == 'b') {
+      // \b: set bps
+      cmd_set_bps();
     } else {
       Serial.print(spi_in, BYTE);
     }
