@@ -31,7 +31,7 @@
 #define UART_IN_SIZE			256				// size of in-buffer
 #define UART_OUT_EMERG			4				// additional reserved bytes for out-buffer
 #define UART_OUT_SIZE			256				// size of out-buffer
-#define UART_SPI_BPS			1				// default bps for spi timer
+#define UART_SPI_BPS			100				// default bps for spi timer
 #define UART_SPI_SPEED			CARD_SPI_524_KHZ_CLOCK	// spi speed (see spi.h)
 #define UART_TIMER_OFF			0xFF			// timer-off value (used for timer)
 
@@ -41,10 +41,10 @@ static uint16 in_size = 0;						// number of bytes in in-buffer
 static uint8 out[UART_OUT_SIZE+UART_OUT_EMERG];	// outgoing buffer
 static uint16 out_head = 0;						// index of next byte to send [0..n]
 static uint16 out_size = 0;						// number of bytes in out-buffer
-static uint8 *raw_dest = NULL;					// destination buffer for raw data
-static uint16 raw_head = 0;						// index of next raw-byte to send [0..n]
-static uint16 raw_irq_bytes = 0;				// bitmask for disabling the timer irq
-static uint16 raw_size = 0;						// number of raw-bytes in out buffer
+static uint8 *prio_dest = NULL;					// destination buffer for raw data
+static uint16 prio_head = 0;					// index of next raw-byte to send [0..n]
+static uint16 prio_irq_bytes = 0;				// bitmask for disabling the timer irq
+static uint16 prio_size = 0;					// number of raw-bytes in out buffer
 static uint8 timer = UART_TIMER_OFF;			// timer number
 static uint16 water_high = 0;					// 0 to turn off, 1..100
 static uint16 water_low = 0;					// 0 to turn off, 1..100
@@ -56,12 +56,11 @@ static void do_spi();
 static void send_watermark(bool highwater);
 static void timer_start();
 static void timer_stop();
-void uart_write_raw(uint8 *buf, uint16 size, uint8 *dest, uint16 irq_bytes);
-
 
 
 static void card_line_irq()
 {
+	// TODO: remove
 	iprintf("received a card line irq\n");
 	do_spi();
 }
@@ -85,20 +84,20 @@ static void do_spi()
 	readBlocking_cardSPI(&read);
 	
 	// handle raw (priority) buffer
-	if (raw_head < raw_size) {
+	if (prio_head < prio_size) {
 		// disable timer irq for certain bytes
-		if (raw_irq_bytes & 0x8000) {
+		if (prio_irq_bytes & 0x8000) {
 			timer_stop();
 		} else {
 			timer_start();
 		}
-		raw_irq_bytes <<= 1;
+		prio_irq_bytes <<= 1;
 		// route to seperate buffer (if set)
 		// TODO: erst ab zweiten?
-		if (raw_dest && raw_head > 0) {
-			raw_dest[raw_head-1] = read;
+		if (prio_dest && prio_head > 0) {
+			prio_dest[prio_head-1] = read;
 		}
-		raw_head++;
+		prio_head++;
 		return;
 	}
 	
@@ -156,7 +155,7 @@ static void send_watermark(bool highwater)
 	if (highwater) {
 		msg[2] = 0x01;
 	}
-	uart_write_raw(msg, 3, NULL, 0x00);
+	uart_write_prio(msg, 3, NULL, 0x00);
 }
 
 
@@ -439,7 +438,7 @@ bool uart_set_bps(uint32 bps)
 	for (i=0; i<sizeof(uart_bps_vals); i++) {
 		if (bps == uart_bps_vals[i]) {
 			msg[2] = (i+1);
-			uart_write_raw(msg, 3, NULL, 0x00);
+			uart_write_prio(msg, 3, NULL, 0x00);
 			return true;
 		}
 	}
@@ -452,18 +451,17 @@ void uart_set_spi_bps(uint32 bps)
 	if (timer == UART_TIMER_OFF)
 		return;
 
-	// BUG
 	if (bps <= 32768) {
-		TIMER_DATA(timer) = TIMER_FREQ_1024(bps);
+		TIMER_DATA(timer) = timerFreqToTicks_1024(bps);
 		TIMER_CR(timer) = TIMER_DIV_1024|TIMER_ENABLE|TIMER_IRQ_REQ;
 	} else if (bps <= 131072) {
-		TIMER_DATA(timer) = TIMER_FREQ_256(bps);
+		TIMER_DATA(timer) = timerFreqToTicks_256(bps);
 		TIMER_CR(timer) = TIMER_DIV_256|TIMER_ENABLE|TIMER_IRQ_REQ;
 	} else if (bps <= 524288) {
-		TIMER_DATA(timer) = TIMER_FREQ_64(bps);
+		TIMER_DATA(timer) = timerFreqToTicks_64(bps);
 		TIMER_CR(timer) = TIMER_DIV_64|TIMER_ENABLE|TIMER_IRQ_REQ;
 	} else {
-		TIMER_DATA(timer) = TIMER_FREQ(bps);
+		TIMER_DATA(timer) = timerFreqToTicks_1(bps);
 		TIMER_CR(timer) = TIMER_DIV_1|TIMER_ENABLE|TIMER_IRQ_REQ;
 	}
 }
@@ -486,7 +484,7 @@ float uart_get_spi_bps()
 }
 
 
-void uart_write_raw(uint8 *buf, uint16 size, uint8 *dest, uint16 irq_bytes)
+void uart_write_prio(uint8 *buf, uint16 size, uint8 *dest, uint16 irq_bytes)
 {
 
 
@@ -507,10 +505,10 @@ void uart_write_raw(uint8 *buf, uint16 size, uint8 *dest, uint16 irq_bytes)
 	memcpy(out, buf, size);
 	out_size += size;
 	
-	raw_dest = dest;
-	raw_head = 0;
-	raw_irq_bytes = irq_bytes << (16-size+1);
-	raw_size = size;
+	prio_dest = dest;
+	prio_head = 0;
+	prio_irq_bytes = irq_bytes << (16-size+1);
+	prio_size = size;
 
 	unlock();
 	
@@ -518,16 +516,16 @@ void uart_write_raw(uint8 *buf, uint16 size, uint8 *dest, uint16 irq_bytes)
 }
 
 
-bool uart_wait_raw(uint8 timeout)
+bool uart_wait_prio(uint8 timeout)
 {
 	time_t start = time(NULL);
 	
 	// wait for sending to finish
 	do {
-		if (raw_head == raw_size) {
+		if (prio_head == prio_size) {
 			// we're done, cleanup
-			raw_size = 0;
-			raw_head = 0;
+			prio_size = 0;
+			prio_head = 0;
 			return true;
 		}
 		swiDelay(0);
@@ -535,9 +533,9 @@ bool uart_wait_raw(uint8 timeout)
 	
 	// we timed out, cleanup
 	lock();
-	out_head = raw_size;
-	raw_size = 0;
-	raw_head = 0;
+	out_head = prio_size;
+	prio_size = 0;
+	prio_head = 0;
 	unlock();
 
 	// restart timer
@@ -552,8 +550,8 @@ uint8 uart_firmware_ver()
 	uint8 msg[] = { '\\', 'v', 0x00 };
 	uint8 ret[2] = { 0 };
 	
-	uart_write_raw(msg, 3, ret, 0x00);
-	uart_wait_raw(0);
+	uart_write_prio(msg, 3, ret, 0x00);
+	uart_wait_prio(0);
 	
 	return ret[1];
 }

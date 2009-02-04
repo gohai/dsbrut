@@ -15,7 +15,6 @@ void setup()
   byte clr;
   
   Serial.begin(57600);
-  Serial.println("Standby..");
   
   // setup SPI interface
   pinMode(SS, INPUT);
@@ -84,10 +83,6 @@ void loop()
   if (got_esc) {
     got_esc = false;
     // handle escape characters
-    if (spi_in == '?') {
-      // DEBUG
-      spi_next = '!';
-      do_spi_next = true;
     } else {
       Serial.print(spi_in, BYTE);
     }

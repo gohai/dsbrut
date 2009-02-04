@@ -32,6 +32,10 @@ void uart_set_watermarks(uint16 high, uint16 low);
 
 float uart_get_spi_bps();
 
+void uart_write_prio(uint8 *buf, uint16 size, uint8 *dest, uint16 irq_bytes);
+
+bool uart_wait_prio(uint8 timeout);
+
 uint8 uart_firmware_ver();
 
 void uart_close();
