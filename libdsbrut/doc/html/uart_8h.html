@@ -1,0 +1,605 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>libdsbrut: uart.h File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css">
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+</head><body>
+<div class="contents">
+<h1>uart.h File Reference</h1><table border="0" cellpadding="0" cellspacing="0">
+<tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#71e9245fe3c08192bac142df41411386">uart_init</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#1b259ce1c48944e43f243d6c049c182d">uart_write</a> (uint8 *buf, uint16 size)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#eb11a18e10109a2e77018f3122c3ea5a">uart_send</a> (char *s)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#aa903418fe64c715a4c0ec288a7bd6c0">uart_sendc</a> (char c)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#ecd88b3e19a9769077a88de54aa2940d">uart_flush</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#a2b0a75f511074605691ec988245ace1">uart_available</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#4862a711bc1ae0e30b2acd618e13df8d">uart_read</a> (uint8 *dest, uint16 size)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#c7e4b9663cdf4764c4a1219792054ced">uart_readstr</a> (char *dest, uint16 size)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#b7a40e853ad6501e0d42ac4a9f3dae34">uart_readln</a> (char *dest, uint16 size, char nl)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#a25d14a1c2594a0493f3fc8dac2ef9db">uart_requeue</a> (uint8 *src, uint16 size)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#fd669ac2d5f87bccf58d468904e3f336">uart_wait</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#7715496d43b88fe87a57208e54010d60">uart_set_bps</a> (uint32 bps)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#94e234453d2120bb5e2340682fca2fcc">uart_set_spi_rate</a> (uint32 bps)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#47db3be3a62c95813d9043defdda46c4">uart_set_watermarks</a> (uint16 high, uint16 low)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#33c5bce34f53303a49aa2c9eef0abe86">uart_get_spi_rate</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#80db3f2bc67f1104f9ecab5613620f20">uart_write_prio</a> (uint8 *buf, uint16 size, uint8 *dest, uint32 irq_bytes)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#4abdeb60fac38eb9eb7a941a5b5a3b41">uart_wait_prio</a> (uint8 timeout)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#02644667c62d8942fe4aae1273b1953b">uart_firmware_ver</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="uart_8h.html#4f3ddbd167ec516ecea31f6a084124b4">uart_close</a> ()</td></tr>
+
+</table>
+<hr><h2>Function Documentation</h2>
+<a class="anchor" name="a2b0a75f511074605691ec988245ace1"></a><!-- doxytag: member="uart.h::uart_available" ref="a2b0a75f511074605691ec988245ace1" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 uart_available           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+return the number of bytes available for reading.<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>number of bytes available for reading </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="4f3ddbd167ec516ecea31f6a084124b4"></a><!-- doxytag: member="uart.h::uart_close" ref="4f3ddbd167ec516ecea31f6a084124b4" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void uart_close           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+close the device. 
+</div>
+</div><p>
+<a class="anchor" name="02644667c62d8942fe4aae1273b1953b"></a><!-- doxytag: member="uart.h::uart_firmware_ver" ref="02644667c62d8942fe4aae1273b1953b" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 uart_firmware_ver           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+get device firmware version.<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>firmware version </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="ecd88b3e19a9769077a88de54aa2940d"></a><!-- doxytag: member="uart.h::uart_flush" ref="ecd88b3e19a9769077a88de54aa2940d" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void uart_flush           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+wait until all bytes have been written to the device. 
+</div>
+</div><p>
+<a class="anchor" name="33c5bce34f53303a49aa2c9eef0abe86"></a><!-- doxytag: member="uart.h::uart_get_spi_rate" ref="33c5bce34f53303a49aa2c9eef0abe86" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float uart_get_spi_rate           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+get the effective baudrate used for sending bytes over the spi bus.<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>baudrate (bytes per second) </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="71e9245fe3c08192bac142df41411386"></a><!-- doxytag: member="uart.h::uart_init" ref="71e9245fe3c08192bac142df41411386" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 uart_init           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+initialize uart library.<p>
+waits for the device to be ready. <dl class="return" compact><dt><b>Returns:</b></dt><dd>timer irq used (0-3) or 0xff in case of error </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="4862a711bc1ae0e30b2acd618e13df8d"></a><!-- doxytag: member="uart.h::uart_read" ref="4862a711bc1ae0e30b2acd618e13df8d" args="(uint8 *dest, uint16 size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 uart_read           </td>
+          <td>(</td>
+          <td class="paramtype">uint8 *&nbsp;</td>
+          <td class="paramname"> <em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16&nbsp;</td>
+          <td class="paramname"> <em>size</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+read from the uart device.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dest</em>&nbsp;</td><td>destination buffer </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>size of destination buffer </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>number of bytes copied to destination buffer </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="b7a40e853ad6501e0d42ac4a9f3dae34"></a><!-- doxytag: member="uart.h::uart_readln" ref="b7a40e853ad6501e0d42ac4a9f3dae34" args="(char *dest, uint16 size, char nl)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 uart_readln           </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16&nbsp;</td>
+          <td class="paramname"> <em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&nbsp;</td>
+          <td class="paramname"> <em>nl</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+read a line from the uart device.<p>
+this function returns all characters up (and including) the newline-characterr nl. the resulting string is null- terminated. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dest</em>&nbsp;</td><td>destination string </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>size of destination string (in bytes) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nl</em>&nbsp;</td><td>newline character (e.g. '<br>
+'); </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>characters copied to destination buffer </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="c7e4b9663cdf4764c4a1219792054ced"></a><!-- doxytag: member="uart.h::uart_readstr" ref="c7e4b9663cdf4764c4a1219792054ced" args="(char *dest, uint16 size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 uart_readstr           </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16&nbsp;</td>
+          <td class="paramname"> <em>size</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+read a string from the uart device.<p>
+this function is a helper function that produces a null- terminated string and returns the number of characters (excluding the final null). <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dest</em>&nbsp;</td><td>destination string </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>size of destination string (in bytes) </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>characters copied to destination buffer </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="a25d14a1c2594a0493f3fc8dac2ef9db"></a><!-- doxytag: member="uart.h::uart_requeue" ref="a25d14a1c2594a0493f3fc8dac2ef9db" args="(uint8 *src, uint16 size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool uart_requeue           </td>
+          <td>(</td>
+          <td class="paramtype">uint8 *&nbsp;</td>
+          <td class="paramname"> <em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16&nbsp;</td>
+          <td class="paramname"> <em>size</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+put the content of a buffer back into the head of the input queue.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>src</em>&nbsp;</td><td>buffer </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>number of bytes to copy </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if successful, false if no bytes have been copied because queue is full </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="eb11a18e10109a2e77018f3122c3ea5a"></a><!-- doxytag: member="uart.h::uart_send" ref="eb11a18e10109a2e77018f3122c3ea5a" args="(char *s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void uart_send           </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>s</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+send a string over the uart device.<p>
+this function is a helper function that returns only after all characters have been put into the output queue. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>null-terminated string to send </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="aa903418fe64c715a4c0ec288a7bd6c0"></a><!-- doxytag: member="uart.h::uart_sendc" ref="aa903418fe64c715a4c0ec288a7bd6c0" args="(char c)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void uart_sendc           </td>
+          <td>(</td>
+          <td class="paramtype">char&nbsp;</td>
+          <td class="paramname"> <em>c</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+send a character over the uart device.<p>
+this function is a helper function that returns only after the character has been put into the output queue. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>c</em>&nbsp;</td><td>character to send </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="7715496d43b88fe87a57208e54010d60"></a><!-- doxytag: member="uart.h::uart_set_bps" ref="7715496d43b88fe87a57208e54010d60" args="(uint32 bps)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void uart_set_bps           </td>
+          <td>(</td>
+          <td class="paramtype">uint32&nbsp;</td>
+          <td class="paramname"> <em>bps</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+set the baudrate to use on the uart side.<p>
+115200 bps seems not to work because of baud rate errors (see p. 196 of the datasheet), the true baudrate is about 126984 there. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>bps</em>&nbsp;</td><td>baudrate (bytes per second) </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="94e234453d2120bb5e2340682fca2fcc"></a><!-- doxytag: member="uart.h::uart_set_spi_rate" ref="94e234453d2120bb5e2340682fca2fcc" args="(uint32 bps)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void uart_set_spi_rate           </td>
+          <td>(</td>
+          <td class="paramtype">uint32&nbsp;</td>
+          <td class="paramname"> <em>bps</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+set the baudrate to use for sending bytes over the spi bus.<p>
+this function adjusts the internal timer frequency. the default baudrate is being defined by UART_SPI_RATE in uart.c (100Hz at the moment). <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>bps</em>&nbsp;</td><td>baudrate (bytes per second) </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="47db3be3a62c95813d9043defdda46c4"></a><!-- doxytag: member="uart.h::uart_set_watermarks" ref="47db3be3a62c95813d9043defdda46c4" args="(uint16 high, uint16 low)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void uart_set_watermarks           </td>
+          <td>(</td>
+          <td class="paramtype">uint16&nbsp;</td>
+          <td class="paramname"> <em>high</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16&nbsp;</td>
+          <td class="paramname"> <em>low</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+set watermarks.<p>
+watermarks are used to signal the communication partner to cease sending bytes because the user-program does not read the input buffer fast enough (or at all) and the input queue is about to overflow. the uart-device can use watermarks to do hardware flow- control. watermarks are disabled by default. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>high</em>&nbsp;</td><td>level for high water (1-100, 0 to disable) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>low</em>&nbsp;</td><td>level for low water (1-100, 0 to disable) </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="fd669ac2d5f87bccf58d468904e3f336"></a><!-- doxytag: member="uart.h::uart_wait" ref="fd669ac2d5f87bccf58d468904e3f336" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void uart_wait           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+wait for a uart event to occur.<p>
+this function returns after a uart timer or spi line irq. it can be used for waiting for some input data to become available. 
+</div>
+</div><p>
+<a class="anchor" name="4abdeb60fac38eb9eb7a941a5b5a3b41"></a><!-- doxytag: member="uart.h::uart_wait_prio" ref="4abdeb60fac38eb9eb7a941a5b5a3b41" args="(uint8 timeout)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool uart_wait_prio           </td>
+          <td>(</td>
+          <td class="paramtype">uint8&nbsp;</td>
+          <td class="paramname"> <em>timeout</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+wait until the priority-write transmission has been completed.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>timeout</em>&nbsp;</td><td>timeout in seconds (or zero to disable) </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if successful, false for timeout </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="1b259ce1c48944e43f243d6c049c182d"></a><!-- doxytag: member="uart.h::uart_write" ref="1b259ce1c48944e43f243d6c049c182d" args="(uint8 *buf, uint16 size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 uart_write           </td>
+          <td>(</td>
+          <td class="paramtype">uint8 *&nbsp;</td>
+          <td class="paramname"> <em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16&nbsp;</td>
+          <td class="paramname"> <em>size</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+write the content of a buffer to the uart device.<p>
+this function internally escapes null-bytes and backspace chars. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>buf</em>&nbsp;</td><td>buffer </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>number of bytes to write </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>number of bytes written </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="80db3f2bc67f1104f9ecab5613620f20"></a><!-- doxytag: member="uart.h::uart_write_prio" ref="80db3f2bc67f1104f9ecab5613620f20" args="(uint8 *buf, uint16 size, uint8 *dest, uint32 irq_bytes)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void uart_write_prio           </td>
+          <td>(</td>
+          <td class="paramtype">uint8 *&nbsp;</td>
+          <td class="paramname"> <em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16&nbsp;</td>
+          <td class="paramname"> <em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8 *&nbsp;</td>
+          <td class="paramname"> <em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32&nbsp;</td>
+          <td class="paramname"> <em>irq_bytes</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+do a priority-write to the uart device.<p>
+the content of buf are added to the head of the output queue, and are guaranteed to fit in there (as other bytes are being descarded to make some room). the content is also not being escapted and the response to each byte stored in the dest buffer (which can be the same as buf). additionally, irq_bytes holds a bitmask for which bytes the library should way for an irq from the uart-device before reading in the next byte over spi. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>buf</em>&nbsp;</td><td>buffer </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>number of bytes to write </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dest</em>&nbsp;</td><td>destination buffer (can be the same as buf) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>irq_bytes</em>&nbsp;</td><td>bitmask (see above; 0x01 is last byte of buf) </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+</div>
+</body>
+</html>

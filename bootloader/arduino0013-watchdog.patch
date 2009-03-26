@@ -1,0 +1,18 @@
+diff -u orig/ATmegaBOOT_168.c new/ATmegaBOOT_168.c
+--- orig/ATmegaBOOT_168.c	Fri Feb  6 12:56:00 2009
++++ new/ATmegaBOOT_168.c	Wed Mar  4 14:08:31 2009
+@@ -258,13 +258,12 @@
+ 	uint8_t ch,ch2;
+ 	uint16_t w;
+ 
+-#ifdef WATCHDOG_MODS
+ 	ch = MCUSR;
+ 	MCUSR = 0;
+ 
+ 	WDTCSR |= _BV(WDCE) | _BV(WDE);
+ 	WDTCSR = 0;
+-
++#ifdef WATCHDOG_MODS
+ 	// Check if the WDT was used to reset, in which case we dont bootload and skip straight to the code. woot.
+ 	if (! (ch &  _BV(EXTRF))) // if its a not an external reset...
+ 		app_start();  // skip bootloader
