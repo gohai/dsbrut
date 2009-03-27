@@ -1,0 +1,33 @@
+* test arduino reset, i2c
+
+* documentation: rename brut.c, uart.c to .cpp when working with c++ code
+
+* implement gordos servo code (no problem now with irqs)
+
+* implement hardware flow control on atmega
+
+* make more arduino-like functions use the new irq functionality instead 
+  of falling back to the timer. at the moment, only analog_read and i2c 
+  are using irqs to wake up the nds. we could use this for more 
+  functionality as it prevents future silent breakage when someone 
+  decides to set the spi_rate higher.
+
+* handle adxl330 better (doing more sampling/calculations on the atmega?)
+
+* we could make arduino-like functions more asynchronous for using them in 
+  in a busy event handler. one function for function for starting a 
+  request and a second one returns true when the result is available - 
+  most likely exposed in a different header file (brut_async.h).
+
+* when changing the uart baud rate we could automatically adjust the spi 
+  rate to some sane value.
+
+* implement setting of parity mode, stop bits and character size (5-8)
+
+* implement setting of internal pull-up resistors for arbitrary pins
+
+* implement midi (see http://dsmi.tobw.net/), dmx?
+
+* make adcplot also support gpip inputs, data acquisition
+
+* zmodem file receive, or something similar
