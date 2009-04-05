@@ -1,16 +1,21 @@
 #include <Wire.h>             // for i2c code
 
-#define VERSION 0x08          // software version (LSB 0..release, 1..devel)
+#define VERSION 0x09          // software version (LSB 0..release, 1..devel)
 
 #define SS 10                 // PB2
 #define MOSI 11               // PB3
 #define MISO 12               // PB4
 #define SCK 13                // PB5
+// todo: define irq
 
 boolean got_esc = false;      // got escape character over spi
 boolean do_spi_next = false;  // next character to send is in spi_next
 boolean i2c_enabled = false;  // called Wire.begin()
 byte spi_next;                // next character to send over spi
+// todo: needed (?)
+volatile byte badc0;
+volatile boolean f_sample;
+
 
 void setup()
 {
@@ -63,6 +68,78 @@ void cmd_analog_read()
   do_irq();
   spi_transfer(val>>8);
   spi_transfer(val&0xff);
+}
+
+
+// timer 2
+ISR(TIMER2_OVF_vect)
+{
+  // is this all needed (?)
+  badc0 = ADCH;
+  f_sample = true;
+  ADCSRA |= (1<<ADSC);
+}
+
+
+void cmd_analog_read_fast()
+{
+  byte i, in, pin, val;
+  byte state = 0;
+  
+  // setup adc control and status register
+  // 500kHz sampling rate (8MHz/16)
+  ADCSRA = (1<<ADEN)|(1<<ADPS2);
+  
+  // &0x0f is sanity check
+  pin = spi_transfer(0x00)&0x0f;
+  
+  // set adc multiplexer selection register
+  // adc data register is left-adjusted
+  // AVCC with external capacitor at AREF pin (?)
+  ADMUX = (1<<ADLAR)|(1<<REFS0)|pin;
+  
+  // set timer/counter control register a
+  // using fast pwm (?)
+  TCCR2A = (1<<COM2A1)|(1<<WGM21)|(1<<WGM20);
+  // set timer/counter control register b
+  // no prescaling
+  TCCR2B = (1<<CS20);
+  
+  // set timer/counter 0 interrupt mask register
+  // disables delay() (?)
+  TIMSK0 = 0;
+  // set timer/counter 1 interrupt mask register
+  TIMSK1 = 0;
+  
+  // read a few samples to prime the adc
+  // start the conversion
+  ADCSRA |= (1<<ADSC);
+  for (i=0; i<8; i++) {
+    // wait until complete
+    while (ADCSRA&(1<<ADSC));
+    // dummy read
+    val = ADCH;
+    // start the next conversion
+    ADCSRA |= (1<<ADSC);
+  }
+  
+  // loop until we receive \F to stop
+  do {
+    while (ADCSRA&(1<<ADSC));
+    val = ADCH;
+    ADCSRA |= (1<<ADSC);
+    in = spi_transfer(val);
+    // check spi input
+    if (state == 0 && in == '\\') {
+      state = 1;
+    } else if (state == 1 && in == 'F') {
+      state = 2;
+    } else if (state == 1) {
+      state = 0;
+    }
+  } while (state < 2);
+  
+  // todo: clean up
 }
 
 
@@ -263,6 +340,10 @@ void loop()
     } else if (spi_in == 'D') {
       // \D: digital write
       cmd_digital_write();
+    } else if (spi_in == 'f') {
+      // \f: start fast adc
+      cmd_analog_read_fast();
+      // (\F stops it)
     } else if (spi_in == 'i') {
       // \i: receive i2c data
       cmd_i2c_receive();
