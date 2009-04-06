@@ -2,8 +2,6 @@
 
 * documentation: rename brut.c, uart.c to .cpp when working with c++ code
 
-* implement bill's fast adc code (see nds_scope_sketch.txt, http://www.byrote.org/arduino/)
-
 * implement gordos servo code (no problem now with irqs)
 
 * implement hardware flow control on atmega

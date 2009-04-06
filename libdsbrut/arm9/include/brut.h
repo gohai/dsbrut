@@ -34,6 +34,19 @@ uint16 analog_read(uint8 pin);
 
 
 /**
+ *	start a fast adc conversion of an analog pin.
+ *
+ *	this function continuously returns the value of the analog pin as an 
+ *	uint8 (8 bit) in the normal input queue (so read with uart_read(), 
+ *	etc). until this function is called again with start set to false, 
+ *	all other data send to the device will be ignored.
+ *	@param start		true to start, false to stop
+ *	@param pin			pin to use (see pin definitions above)
+ */
+void analog_read_fast(bool start, uint8 pin);
+
+ 
+/**
  *	write a pwm value to a pin.
  *
  *	works with PD3, PD6, PD5

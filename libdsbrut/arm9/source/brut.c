@@ -45,6 +45,41 @@ uint16 analog_read(uint8 pin)
 }
 
 
+void analog_read_fast(bool start, uint8 pin)
+{
+	uint8 msg[] = { '\\', 'f', 0x00 };
+	uint16 i;
+	
+	if (!start)
+		msg[1] = 'F';			// stop command
+	
+	// fix pin mapping
+	if (pin == PC5) {
+		msg[2] = 5;
+	} else if (pin == PC4) {
+		msg[2] = 4;
+	} else if (pin == PC3) {
+		msg[2] = 3;
+	}
+	
+	if (start) {
+		// flush output buffer first
+		uart_flush();
+		uart_write_prio(msg, 3, NULL, 0x00);
+		uart_wait_prio(2);
+		// drain the remaining in-queue with dummy reads
+		while((i = uart_read(NULL, 128)));		
+		// this would be the place to adjust the spi rate
+	} else {
+		uart_write_prio(msg, 2, NULL, 0x00);
+		uart_wait_prio(2);
+		// drain the remaining in-queue with dummy reads
+		while((i = uart_read(NULL, 128)));
+		// this would be the place to adjust the spi rate again
+	}
+}
+
+
 void analog_write(uint8 pin, uint8 val)
 {
 	uint8 msg[] = { '\\', 'A', 0x00, 0x00 };

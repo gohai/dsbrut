@@ -13,8 +13,8 @@ boolean do_spi_next = false;  // next character to send is in spi_next
 boolean i2c_enabled = false;  // called Wire.begin()
 byte spi_next;                // next character to send over spi
 // todo: needed (?)
-volatile byte badc0;
-volatile boolean f_sample;
+//volatile byte badc0;
+//volatile boolean f_sample;
 
 
 void setup()
@@ -72,6 +72,7 @@ void cmd_analog_read()
 
 
 // timer 2
+/*
 ISR(TIMER2_OVF_vect)
 {
   // is this all needed (?)
@@ -79,10 +80,12 @@ ISR(TIMER2_OVF_vect)
   f_sample = true;
   ADCSRA |= (1<<ADSC);
 }
+*/
 
 
 void cmd_analog_read_fast()
 {
+  // todo: credits (bill, http://www.byrote.org/arduino/)
   byte i, in, pin, val;
   byte state = 0;
   
