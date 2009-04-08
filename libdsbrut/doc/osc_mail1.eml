@@ -1,0 +1,146 @@
+X-Account-Key: account2
+X-UIDL: GmailId120577da07e98ed0
+X-Mozilla-Status: 0011
+X-Mozilla-Status2: 00000000
+X-Mozilla-Keys:                                                                                 
+Delivered-To: gottfried.haider@gmail.com
+Received: by 10.204.122.142 with SMTP id l14cs11473bkr;
+        Mon, 30 Mar 2009 06:07:13 -0700 (PDT)
+Received: by 10.151.11.19 with SMTP id o19mr10397477ybi.146.1238418432215;
+        Mon, 30 Mar 2009 06:07:12 -0700 (PDT)
+Return-Path: <dreschel@verizon.net>
+Received: from vms173007.mailsrvcs.net (vms173007pub.verizon.net [206.46.173.7])
+        by mx.google.com with ESMTP id 3si8480047gxk.9.2009.03.30.06.07.11;
+        Mon, 30 Mar 2009 06:07:12 -0700 (PDT)
+Received-SPF: pass (google.com: domain of dreschel@verizon.net designates 206.46.173.7 as permitted sender) client-ip=206.46.173.7;
+Authentication-Results: mx.google.com; spf=pass (google.com: domain of dreschel@verizon.net designates 206.46.173.7 as permitted sender) smtp.mail=dreschel@verizon.net
+Received: from your4105e587b6 ([96.235.224.76]) by vms173007.mailsrvcs.net
+ (Sun Java(tm) System Messaging Server 6.3-7.04 (built Sep 26 2008; 32bit))
+ with ESMTPA id <0KHB00ISPLRXL3P9@vms173007.mailsrvcs.net> for
+ gottfried.haider@gmail.com; Mon, 30 Mar 2009 08:07:11 -0500 (CDT)
+Message-id: <96A0B575F6234C1A8D170A0FE76A7D66@your4105e587b6>
+From: "Dreschel" <dreschel@verizon.net>
+To: "Gottfried Haider" <gottfried.haider@gmail.com>
+References: <1336E9727BD6453489C0B5ADA45B1C59@your4105e587b6>
+ <49D0B51C.5020705@gmail.com> <B4A7639FFB744C968E70E32823F4A631@your4105e587b6>
+ <49D0BDA6.9010704@gmail.com>
+Subject: Re: NDS Oscilloscope
+Date: Mon, 30 Mar 2009 09:06:55 -0500
+MIME-version: 1.0
+Content-type: text/plain; format=flowed; charset=ISO-8859-15;
+ reply-type=response
+Content-transfer-encoding: 7bit
+X-Priority: 3
+X-MSMail-priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2900.5512
+X-MIMEOLE: Produced By Microsoft MimeOLE V6.00.2900.5512
+
+Hi Gottfried,
+The ADC is running in 8 bit mode. It can run as high as 1MHz clock rate for 
+15 cycles of conversion, so 15us per conversion. I am running it right now 
+at half that rate. And syncing the conversion rate to the SPI transfer rate. 
+Which I bumped up a bit to 20kHz. (I have a feeling all this can be 
+increased more but I don't know how right now.)
+
+The mode I use for the waveform display is:
+
+  videoSetMode(MODE_FB0);
+  vramSetBankA(VRAM_A_LCD);
+
+It is the most basic NDS graphics mode with direct access to the video 
+memory.
+The main loop is now just:
+
+ while(true) {
+  swiWaitForVBlank();
+if (frame==0){
+   uartAnalogRead(1,dat_array2);
+   display_data(dat_array1,VRAM_A,RGB15(28,28,31)); //clear out the last 
+waveform to background
+   display_data(dat_array2,VRAM_A,RGB15(0,0,31));  //draw the new waveform 
+blue
+   for (i=0;i<384;i++) dat_array1[i]=dat_array2[i]; //save it for undraw
+   }
+
+With:
+//---------------------------------------------------------------------------------
+void Vblank() {
+//---------------------------------------------------------------------------------
+if (frame==0) frame = 1;
+else frame = 0;
+}
+
+Give me a day to clean things up and try a few functions I am thinking about 
+and I will send you the whole package. I am doing some things that work, but 
+I am not completely sure why, that I want to at least comment on, so better 
+DS programmers than me can explain...
+Bill
+
+
+----- Original Message ----- 
+From: "Gottfried Haider" <gottfried.haider@gmail.com>
+To: "Dreschel" <dreschel@verizon.net>
+Sent: Monday, March 30, 2009 7:40 AM
+Subject: Re: NDS Oscilloscope
+
+
+> hi bill,
+>
+> wow, never thought the build-in adc could be that fast! impressive.. i 
+> think i got about 100-200 hz with 10-bit analogRead() on the arduino last 
+> time i tried.
+>
+> i'll try integrate this code with the latest version.. everything not 
+> commented-out is needed for the fast adc to work, right? (including the 
+> timer)
+> what graphics mode are you using for the oscilloscope?
+>
+> cheers,
+> g
+>
+>
+>> Hi Gottfried,
+>> I am just using the ADC in the atmega168. I run my atmega at 8MHz using 
+>> the internal oscillator just like DS-BRUT. I came across a website 
+>> (http://www.byrote.org/arduino/) discussing high speed ADC techniques and 
+>> adapted it to the Arduino sketch that was included in your original 
+>> software. I am not using the newest code... just alot of mods and some 
+>> timing tweaks.  The NDS is a strange beast. I am attaching the Arduino 
+>> sketch if you want to look at it. Most of the action is in the modified 
+>> AnalogRead routine.
+>> Bill
+>>
+>> ----- Original Message ----- 
+>> From: "Gottfried Haider" <gottfried.haider@gmail.com>
+>> To: "Dreschel" <dreschel@verizon.net>
+>> Sent: Monday, March 30, 2009 7:03 AM
+>> Subject: Re: NDS Oscilloscope
+>>
+>>
+>>> hi bill,
+>>>
+>>> weird funny game indeed :) great stuff!.. what are you using for the 
+>>> adc? is this using the library/sketch we just released some days ago ( 
+>>> http://dsbrut.sukzessiv.net/news/6 )?
+>>>
+>>> best wishes,
+>>> g
+>>>
+>>>
+>>>> Hi Gottfried,
+>>>> Sorry for the big file but I thought a movie would help demo this 
+>>>> better. Here is the DS using my Arduino-BRUT running as an 
+>>>> oscilloscope. The sampling rate is 20kHz (though I think I can go as 
+>>>> high as 66kHz. The screen update rate is around 15Hz, I believe. The 
+>>>> signal height as displayed on the screen is 2.5Vpp. I am generating the 
+>>>> swept sinewave using an ADUC7020 (Analog Devices uC) demo board.
+>>>> Sorry for the poor video quality. If I can find a way to make a better 
+>>>> video of a DS screen, I will send it. I think my code, with some small 
+>>>> alterations will run on DS-BRUT, if you are interested.
+>>>> Bill
+>>>>
+>>>> ------------------------------------------------------------------------
+>>>> 
+
+
+

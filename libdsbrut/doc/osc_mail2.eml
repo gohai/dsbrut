@@ -1,0 +1,1048 @@
+X-Account-Key: account2
+X-UIDL: GmailId12077492c64f3e31
+X-Mozilla-Status: 0011
+X-Mozilla-Status2: 00000000
+X-Mozilla-Keys:                                                                                 
+Delivered-To: gottfried.haider@gmail.com
+Received: by 10.204.122.142 with SMTP id l14cs73083bkr;
+        Sun, 5 Apr 2009 10:17:47 -0700 (PDT)
+Received: by 10.151.11.19 with SMTP id o19mr6702919ybi.58.1238951865428;
+        Sun, 05 Apr 2009 10:17:45 -0700 (PDT)
+Return-Path: <dreschel@verizon.net>
+Received: from vms173007.mailsrvcs.net (vms173007pub.verizon.net [206.46.173.7])
+        by mx.google.com with ESMTP id 25si4709672gxk.94.2009.04.05.10.17.44;
+        Sun, 05 Apr 2009 10:17:45 -0700 (PDT)
+Received-SPF: pass (google.com: domain of dreschel@verizon.net designates 206.46.173.7 as permitted sender) client-ip=206.46.173.7;
+Authentication-Results: mx.google.com; spf=pass (google.com: domain of dreschel@verizon.net designates 206.46.173.7 as permitted sender) smtp.mail=dreschel@verizon.net
+Received: from your4105e587b6 ([96.247.162.234]) by vms173007.mailsrvcs.net
+ (Sun Java(tm) System Messaging Server 6.3-7.04 (built Sep 26 2008; 32bit))
+ with ESMTPA id <0KHN00LD21DGSBXK@vms173007.mailsrvcs.net> for
+ gottfried.haider@gmail.com; Sun, 05 Apr 2009 12:17:44 -0500 (CDT)
+Message-id: <4B5B507BFAB1478A8AD7EEE3A0F47B05@your4105e587b6>
+From: "Dreschel" <dreschel@verizon.net>
+To: "Gottfried Haider" <gottfried.haider@gmail.com>
+References: <F3B98B9C9D794576BEA1D3099EBFC4E6@your4105e587b6>
+ <49D85288.9000607@gmail.com>
+Subject: Re: NDS Oscilloscope
+Date: Sun, 05 Apr 2009 14:17:22 -0400
+MIME-version: 1.0
+Content-type: multipart/alternative;
+ boundary="----=_NextPart_000_0009_01C9B5F9.3C681CB0"
+X-Priority: 3
+X-MSMail-priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2900.5512
+X-MIMEOLE: Produced By Microsoft MimeOLE V6.00.2900.5512
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0009_01C9B5F9.3C681CB0
+Content-Type: text/plain;
+	charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Gottfried,
+Sorry for the late response. Verizon email has been acting odd lately.
+See below.
+Bill
+----- Original Message -----=20
+From: "Gottfried Haider" <gottfried.haider@gmail.com>
+To: "Dreschel" <dreschel@verizon.net>
+Sent: Sunday, April 05, 2009 2:41 AM
+Subject: Re: NDS Oscilloscope
+
+
+> hi bill,
+>=20
+>=20
+> i just tried incorporating your code into the latest version of the=20
+> firmware.. it compiles but isn't tested yet :)
+>=20
+> does it look correct to you? i have to say that the internal workings =
+of=20
+I will look at it in more detail tonight. Best thing is just to give it =
+a spin.
+> adc conversions are way over my head.. i had a peek at the datasheet=20
+> every now and then, but i am still somewhat in the dark.
+>=20
+> the way i wanted to implement it is to have a function which gets =
+called=20
+> when a certain escape sequence (\f[ast adc]) has been received. in the =
+
+> function, all the setup is being done there, we prime the adc (just =
+once=20
+> not every 384 c.) and sample in a loop until we receive the sequence =
+to=20
+> stop - in case we best unset all timers, etc. again.
+> a big plus here is that it is not longer necessary to wait for the =
+four=20
+> bytes carrying the message every 384 bytes and the rate we sample in =
+is=20
+I use 384 samples, simply to try to set a common starting trigger level =
+for the plotting of the data on the screen. This is by no means fool =
+proof and I am looking at better ways to do the triggering, including =
+having the Arduino converting nearly continuously while waiting for =
+commands from the DS. The plotting routine looks for this level and then =
+plots the 256 points that come after. If you are not plotting the data, =
+you can grab any number (as long as it does not screw=20
+> completely synchonous to the spi frequency (as spi_transfer blocks).
+>=20
+> some points i wasn't sure about:
+>=20
+> in ADCSRA, the 500kHz sampling rate - was this the maximum you=20
+> determined in testing?
+No, you can run the ADC at 1MHz. This will give you a total sampling =
+time of ~15us which will put the sampling rate at 66kHz. I have a mode =
+that runs that right now in my code.
+>=20
+> in ADMUX, the (1<<REFS0) - we have a AREF wired to VCC atm, what's the =
+
+> benefit of using this? is it necessary?
+In the typical Arduino setup, AVcc is connected directly to Vcc and Aref =
+floats. The datasheet for the ATMEGA168 says about Aref:
+If the user has a fixed voltage source connected to the AREF pin, the =
+user may not use the other reference voltage options in the application, =
+as they will be shorted to the external voltage. If no external voltage =
+is applied to the AREF pin, the user may switch between AVCC and 1.1V as =
+referenceselection. The first ADC conversion result after switching =
+reference voltage source maybe inaccurate, and the user is advised to =
+discard this result.
+
+See figure 21-1 in the datasheet also. So, if you use AVcc as the =
+reference input pin, then you can also select either the external =
+reference (AVcc) or the 1.1V internal reference. If you use Aref, then =
+your choice is only Aref. In this case, don't use THIS software =
+selection, it will short the other references to the Aref. Capacitively =
+decoupling any ADC reference is nearly always a good idea. I will send =
+you a link on recommended decoupling... this one is a bit extreme but =
+shows all of the recommendations applied.
+
+
+>=20
+> TCCR2A & TCCR2B i don't get - is this something that would need to be=20
+> also adjusted when tweaking the sampling rate or would this be left =
+alone?
+>=20
+> TIMSK0 & TIMSK1 - you disable them so that no interrupts occur during=20
+> the conversion.. which means Arduino's delay() would not work? is=20
+> renabling them as easy as writing the old value to a variable and=20
+> re-setting it at the end of the function?
+>=20
+> thx btw :)
+>=20
+> oh, and is the ISR(TIMER2_OVF_vect) code doing anything??
+>=20
+All of the timer stuff was referenced from that high speed ADC website =
+(http://www.byrote.org/arduino/). He used the timers and an interrupt =
+routine to trigger an AD collection every 16 microseconds. I am not. I =
+just synchronously grab the data bytes as they are available, with the =
+conversion rate ultimately set by the ADPS* bits.
+=20
+>> Also I changed the SPI IRQ bit from PB6 to PB1 (see that=20
+>> Arduino routine) (because a lot of Arduino PCB use PB6 as an =
+oscillator=20
+>> pin, and I wanted compatibility for the board I am laying out.
+>=20
+> okay, we have them hardwired.. but i'll make a define!
+>=20
+>> I converted everything to C++, so I could initially use floating =
+point =20
+>> (which did not seem to be supported in C in devkitPro.
+The math.h file in C did not reference any of the trig functions, hence =
+I moved to CPP. Maybe I got a freak devkitpro build...
+>=20
+> hm, floating point does seem to work for me.. did you maybe try to use =
+
+> iprintf to output the values (cause that's the lean version of printf=20
+> not supporting floating point output)?
+>=20
+>=20
+> cheers,
+> gottfried
+>
+
+
+-------------------------------------------------------------------------=
+-------
+
+
+> #include <Wire.h>             // for i2c code
+>=20
+> #define VERSION 0x08          // software version (LSB 0..release, =
+1..devel)
+> #define ADC_CNT 384           // number of adc conversions we do
+>=20
+> #define SS 10                 // PB2
+> #define MOSI 11               // PB3
+> #define MISO 12               // PB4
+> #define SCK 13                // PB5
+>=20
+> boolean got_esc =3D false;      // got escape character over spi
+> boolean do_spi_next =3D false;  // next character to send is in =
+spi_next
+> boolean i2c_enabled =3D false;  // called Wire.begin()
+> byte spi_next;                // next character to send over spi
+> // needed (?)
+> volatile byte badc0;
+> volatile boolean f_sample;
+>=20
+>=20
+> void setup()
+> {
+>  byte clr;
+> =20
+>  Serial.begin(57600);
+> =20
+>  // setup SPI interface
+>  pinMode(SS, INPUT);
+>  pinMode(MOSI, INPUT);
+>  pinMode(MISO, OUTPUT);
+>  pinMode(SCK, INPUT);
+> =20
+>  // enable SPI interface, CPOL=3D1, CHPA=3D1
+>  SPCR =3D (1<<6)|(1<<3)|(1<<2);
+>  // dummy read
+>  clr =3D SPSR;
+>  clr =3D SPDR;
+> }
+>=20
+>=20
+> void do_irq()
+> {
+>  // raise a Card Line hardware interrupt (PB6)
+>  DDRB |=3D (1 << 6);
+>  PORTB &=3D ~(1 << 6);    // low
+>  PORTB |=3D (1 << 6);     // high
+>  PORTB &=3D ~(1 << 6);    // low =20
+> }
+>=20
+>=20
+> byte spi_transfer(volatile byte out)
+> {
+>  // send and receive a character, blocking
+>  SPDR =3D out;
+>  while (!(SPSR & (1<<7)));
+>  return SPDR;
+> }
+>=20
+>=20
+> void cmd_analog_read()
+> {
+>  byte pin;
+>  unsigned int val;
+>=20
+>  pin =3D spi_transfer(0x00);
+>  pinMode(pin, INPUT);
+>  val =3D analogRead(pin);
+>  // wake up nds (might not be needed for adc, but a good test)
+>  do_irq();
+>  spi_transfer(val>>8);
+>  spi_transfer(val&0xff);
+> }
+>=20
+>=20
+> // timer 2
+> ISR(TIMER2_OVF_vect)
+> {
+>  // is this all needed (?)
+>  badc0 =3D ADCH;
+>  f_sample =3D true;
+>  ADCSRA |=3D (1<<ADSC);
+> }
+>=20
+>=20
+> void cmd_analog_read_fast()
+> {
+>  unsigned int i;
+>  byte in, pin, val;
+>  byte state =3D 0;
+> =20
+>  // setup adc control and status register
+>  // 500kHz sampling rate (8MHz/16)
+>  ADCSRA =3D (1<<ADEN)|(1<<ADPS2);
+> =20
+>  // &0x0f is sanity check
+>  pin =3D spi_transfer(0x00)&0x0f;
+> =20
+>  // set adc multiplexer selection register
+>  // adc data register is left-adjusted
+>  // AVCC with external capacitor at AREF pin (?)
+>  ADMUX =3D (1<<ADLAR)|(1<<REFS0)|pin;
+> =20
+>  // set timer/counter control register a
+>  // using fast pwm (?)
+>  TCCR2A =3D (1<<COM2A1)|(1<<WGM21)|(1<<WGM20);
+>  // set timer/counter control register b
+>  // no prescaling
+>  TCCR2B =3D (1<<CS20);
+> =20
+>  // set timer/counter 0 interrupt mask register
+>  // disables delay() (?)
+>  TIMSK0 =3D 0;
+>  // set timer/counter 1 interrupt mask register
+>  TIMSK1 =3D 0;
+> =20
+>  // read a few samples to prime the adc
+>  // start the conversion
+>  ADCSRA |=3D (1<<ADSC);
+>  for (i=3D0; i<8; i++) {
+>    // wait until complete
+>    while (ADCSRA&(1<<ADSC));
+>    // dummy read
+>    val =3D ADCH;
+>    // start the next conversion
+>    ADCSRA |=3D (1<<ADSC);
+>  }
+> =20
+>  // loop until we receive \F to stop
+>  do {
+>   // read analog pin ADC_CNT times (?)
+>   for (i=3D0; i<ADC_CNT; i++) {
+>     while (ADCSRA&(1<<ADSC));
+>     val =3D ADCH;
+>     ADCSRA |=3D (1<<ADSC);
+>     in =3D spi_transfer(val);
+>     // check spi input
+>     if (state =3D=3D 0 && in =3D=3D '\\') {
+>       state =3D 1;
+>     } else if (state =3D=3D 1 && in =3D=3D 'F') {
+>       state =3D 2;
+>     } else if (state =3D=3D 1) {
+>       state =3D 0;
+>     }
+>   }
+>  } while (state < 2);
+> =20
+>  // TODO: clean up
+> }
+>=20
+>=20
+> void cmd_analog_write()
+> {
+>  byte pin;
+>  byte val;
+>=20
+>  pin =3D spi_transfer(0x00);
+>  val =3D spi_transfer(0x00);
+>  pinMode(pin, OUTPUT);
+>  analogWrite(pin, val);
+> }
+>=20
+>=20
+> void cmd_digital_read()
+> {
+>  byte pin;
+>  int val;
+> =20
+>  pin =3D spi_transfer(0x00);
+>  pinMode(pin, INPUT);
+>  val =3D digitalRead(pin);
+>  if (val =3D=3D HIGH) {
+>    spi_transfer(0x01);
+>  } else {
+>    spi_transfer(0x00);
+>  }
+> }
+>=20
+>=20
+> void cmd_digital_write()
+> {
+>  byte pin;
+>  byte val;
+> =20
+>  pin =3D spi_transfer(0x00);
+>  val =3D spi_transfer(0x00);
+>  pinMode(pin, OUTPUT);
+>  if (val =3D=3D 0x01) {
+>    digitalWrite(pin, HIGH);
+>  } else if (val =3D=3D 0x00) {
+>    digitalWrite(pin, LOW);
+>  }
+> }
+>=20
+>=20
+> void cmd_firmware_ver()
+> {
+>  spi_transfer(VERSION);
+> }
+>=20
+>=20
+> void cmd_hw_reset()
+> {
+>    // try to rest via watchdog
+>    WDTCSR =3D _BV(WDE);
+>    // if the bootloader supports it, the device should
+>    // reset itself ~ 16ms later
+> }
+>=20
+>=20
+> void cmd_i2c_receive()
+> {
+>  byte addr;
+>  byte len;
+>  byte ret;
+> =20
+>  if (!i2c_enabled) {
+>    // join the i2c bus as master
+>    Wire.begin();
+>    i2c_enabled =3D true;
+>  }
+>  addr =3D spi_transfer(0x00);
+>  len =3D spi_transfer(0x00);
+>  ret =3D Wire.requestFrom(addr, len);
+>  // wake up nds, return number of bytes read
+>  do_irq();
+>  spi_transfer(ret);
+>  // return expected number of bytes
+>  while (len !=3D 0) {
+>    if (ret !=3D 0) {
+>      spi_transfer(Wire.receive());
+>      ret--;
+>    } else {
+>      // return dummy byte
+>      spi_transfer(0x00);
+>    }
+>    len--;
+>  }
+> }
+>=20
+>=20
+> void cmd_i2c_send()
+> {
+>  byte len;
+>  byte ret;
+> =20
+>  if (!i2c_enabled) {
+>    // join the i2c bus as master
+>    Wire.begin();
+>    i2c_enabled =3D true;
+>  }
+>  Wire.beginTransmission(spi_transfer(0x00));
+>  len =3D spi_transfer(0x00);
+>  while (len !=3D 0) {
+>    Wire.send(spi_transfer(0x00));
+>    len--;
+>  }
+>  ret =3D Wire.endTransmission();
+>  // wake up nds, return result
+>  do_irq();
+>  spi_transfer(ret);
+> }
+>=20
+>=20
+> void cmd_reg_read_8()
+> {
+>  volatile byte *reg;
+> =20
+>  reg =3D (volatile byte*)spi_transfer(0x00);
+>  spi_transfer(*reg);
+> }
+>=20
+>=20
+> void cmd_reg_write_8()
+> {
+>  volatile byte *reg;
+> =20
+>  reg =3D (volatile byte*)spi_transfer(0x00);
+>  *reg =3D spi_transfer(0x00);
+> }
+>=20
+>=20
+> void cmd_set_bps()
+> {
+>  unsigned long bps;
+>  unsigned int bps_high, bps_low;
+>  unsigned long bps_test =3D 57600;
+> =20
+>  // shifting does not work on arduino with > 16-bit values
+>  bps_high =3D spi_transfer(0x00)<<8;
+>  bps_high |=3D spi_transfer(0x00);
+>  bps_low =3D spi_transfer(0x00)<<8;
+>  bps_low |=3D spi_transfer(0x00);
+>  bps =3D bps_high*0x10000+bps_low;
+> =20
+>  Serial.begin(bps);
+> }
+>=20
+>=20
+> void loop()
+> {
+>  byte serial_in;
+>  byte spi_in;
+> =20
+>  if (do_spi_next) {
+>    serial_in =3D spi_next;
+>    do_spi_next =3D false;
+>  } else if (Serial.available() > 0) {
+>    serial_in =3D Serial.read();
+>    // escape null-bytes and blackslashes and 0xff
+>    if (serial_in =3D=3D 0x00) {
+>      serial_in =3D '\\';
+>      spi_next =3D 0x00;
+>      do_spi_next =3D true;
+>    } else if (serial_in =3D=3D '\\') {
+>      spi_next =3D '\\';
+>      do_spi_next =3D true;
+>    } else if (serial_in =3D=3D 0xff) {
+>      serial_in =3D '\\';
+>      spi_next =3D 0xff;
+>      do_spi_next =3D true;
+>    }
+>  } else {
+>    // send dummy byte
+>    serial_in =3D 0x00;
+>  }
+> =20
+>  // do spi
+>  spi_in =3D spi_transfer(serial_in);
+> =20
+>  if (got_esc) {
+>    got_esc =3D false;
+>    // handle escape characters
+>    if (spi_in =3D=3D 'a') {
+>      // \a: analog read
+>      cmd_analog_read();
+>    } else if (spi_in =3D=3D 'A') {
+>      // \A: analog write
+>      cmd_analog_write();
+>    } else if (spi_in =3D=3D 'b') {
+>      // \b: set bps
+>      cmd_set_bps();
+>    } else if (spi_in =3D=3D 'd') {
+>      // \d: digital read
+>      cmd_digital_read();
+>    } else if (spi_in =3D=3D 'D') {
+>      // \D: digital write
+>      cmd_digital_write();
+>    } else if (spi_in =3D=3D 'f') {
+>      // \f: start fast adc
+>      cmd_analog_read_fast();
+>      // (\F stops it)
+>    } else if (spi_in =3D=3D 'i') {
+>      // \i: receive i2c data
+>      cmd_i2c_receive();
+>    } else if (spi_in =3D=3D 'I') {
+>      // \I: send i2c data
+>      cmd_i2c_send();
+>    } else if (spi_in =3D=3D 'r') {
+>      // \r: read from register
+>      cmd_reg_read_8();
+>    } else if (spi_in =3D=3D 'R') {
+>      // \R: write to register
+>      cmd_reg_write_8();
+>    } else if (spi_in =3D=3D 'v') {
+>      // \v: get firmware version
+>      cmd_firmware_ver();
+>    } else if (spi_in =3D=3D 'x') {
+>      // \x: hardware reset
+>      cmd_hw_reset();
+>    } else {
+>      Serial.print(spi_in, BYTE);
+>    }
+>  } else if (spi_in =3D=3D '\\') {
+>    got_esc =3D true;
+>  } else if (spi_in !=3D 0x00) {
+>    Serial.print(spi_in, BYTE);
+>  }
+> }
+>
+------=_NextPart_000_0009_01C9B5F9.3C681CB0
+Content-Type: text/html;
+	charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-15">
+<META content=3D"MSHTML 6.00.6000.16640" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY>
+<DIV><FONT face=3DArial size=3D2>Hi Gottfried,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Sorry for the late response. Verizon =
+email has been=20
+acting odd lately.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>See below.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Bill</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>----- Original Message ----- </FONT>
+<DIV><FONT face=3DArial size=3D2>From: "Gottfried Haider" &lt;</FONT><A=20
+href=3D"mailto:gottfried.haider@gmail.com"><FONT face=3DArial=20
+size=3D2>gottfried.haider@gmail.com</FONT></A><FONT face=3DArial=20
+size=3D2>&gt;</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>To: "Dreschel" &lt;</FONT><A=20
+href=3D"mailto:dreschel@verizon.net"><FONT face=3DArial=20
+size=3D2>dreschel@verizon.net</FONT></A><FONT face=3DArial =
+size=3D2>&gt;</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Sent: Sunday, April 05, 2009 2:41 =
+AM</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Subject: Re: NDS =
+Oscilloscope</FONT></DIV></DIV>
+<DIV><FONT face=3DArial><BR><FONT size=3D2></FONT></FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&gt; hi bill,<BR>&gt; <BR>&gt; <BR>&gt; =
+i just=20
+tried incorporating your code into the latest version of the <BR>&gt; =
+firmware..=20
+it compiles but isn't tested yet :)<BR>&gt; <BR>&gt; does it look =
+correct to=20
+you? i have to say that the internal workings of </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2><FONT color=3D#0000ff>I will look at it =
+in more=20
+detail tonight. Best thing is just to give it a spin.</FONT><BR>&gt; adc =
+
+conversions are way over my head.. i had a peek at the datasheet =
+<BR>&gt; every=20
+now and then, but i am still somewhat in the dark.<BR>&gt; <BR>&gt; the =
+way i=20
+wanted to implement it is to have a function which gets called <BR>&gt; =
+when a=20
+certain escape sequence (\f[ast adc]<FONT color=3D#0000ff>) </FONT>has =
+been=20
+received. in the </FONT><FONT face=3DArial size=3D2><BR>&gt; function, =
+all the setup=20
+is being done there, we prime the adc (just once <BR>&gt; not every 384 =
+c.) and=20
+sample in a loop until we receive the sequence to <BR>&gt; stop - in =
+case we=20
+best unset all timers, etc. again.<BR>&gt; a big plus here is that it is =
+not=20
+longer necessary to wait for the four <BR>&gt; bytes carrying the =
+message every=20
+384 bytes and the rate we sample in is </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2><FONT color=3D#0000ff>I use 384 =
+samples, simply to=20
+try to set a common starting trigger level for the plotting of the data =
+on the=20
+screen. This is by no means fool proof and I am looking at better ways =
+to do the=20
+triggering, including having the Arduino converting nearly continuously =
+while=20
+waiting for commands from the DS. The plotting routine looks for this =
+level=20
+and&nbsp;then plots the 256 points that come after.&nbsp;If you are not =
+plotting=20
+the data, you can grab any number (as long as it does not screw =
+</FONT><BR>&gt;=20
+completely synchonous to the spi frequency (as spi_transfer =
+blocks).<BR>&gt;=20
+<BR>&gt; some points i wasn't sure about:<BR>&gt; </FONT><FONT =
+face=3DArial=20
+size=3D2><BR>&gt; in ADCSRA, the 500kHz sampling rate - was this the =
+maximum you=20
+<BR>&gt; determined in testing?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2><FONT color=3D#0000ff>No, you can run =
+the ADC at=20
+1MHz. This will give you a total sampling time of ~15us which will put =
+the=20
+sampling rate at 66kHz. I have a mode that runs that right now in my=20
+code.<BR></FONT>&gt; <BR>&gt; in ADMUX, the (1&lt;&lt;REFS0) - we have a =
+AREF=20
+wired to VCC atm, what's the <BR>&gt; benefit of using this? is it=20
+necessary?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2><FONT color=3D#0000ff>In the typical =
+Arduino setup,=20
+AVcc is connected directly to Vcc and Aref floats. The datasheet for the =
+
+ATMEGA168 says about Aref:</FONT></FONT></DIV><FONT face=3DArial =
+size=3D2><FONT=20
+face=3DArial size=3D2><FONT face=3DArial size=3D2>
+<P align=3Dleft>If the user has a fixed voltage source connected to the =
+AREF pin,=20
+the user may not use the other reference voltage options in the =
+application, as=20
+they will be shorted to the external voltage. If no external voltage is =
+applied=20
+to the AREF pin, the user may switch between AV</FONT></FONT><FONT =
+face=3DArial=20
+size=3D1><FONT face=3DArial size=3D1>CC </FONT></FONT><FONT face=3DArial =
+size=3D2><FONT=20
+face=3DArial size=3D2>and 1.1V as referenceselection. The first ADC =
+conversion=20
+result after switching reference voltage source maybe inaccurate, and =
+the user=20
+is advised to discard this result.</FONT></FONT></P>
+<P align=3Dleft><FONT face=3DArial size=3D2><FONT face=3DArial =
+size=3D2><FONT=20
+color=3D#0000ff>See figure 21-1 in the datasheet also. So, if you use =
+AVcc as the=20
+reference input pin, then you can also select either the external =
+reference=20
+(AVcc) or the 1.1V internal reference. If you use Aref, then your choice =
+is only=20
+Aref. In this case, don't use&nbsp;THIS software selection, it will =
+short the=20
+other references to the Aref. Capacitively decoupling any ADC reference =
+is=20
+nearly always a good idea. I will send you a link on recommended =
+decoupling...=20
+this one is a bit extreme but shows all of the recommendations=20
+applied.</FONT></P></FONT></FONT>
+<DIV><BR>&gt; <BR>&gt; TCCR2A &amp; TCCR2B i don't get - is this =
+something that=20
+would need to be <BR>&gt; also adjusted when tweaking the sampling rate =
+or would=20
+this be left alone?<BR>&gt; <BR>&gt; TIMSK0 &amp; TIMSK1 - you disable =
+them so=20
+that no interrupts occur during <BR>&gt; the conversion.. which means =
+Arduino's=20
+delay() would not work? is <BR>&gt; renabling them as easy as writing =
+the old=20
+value to a variable and <BR>&gt; re-setting it at the end of the=20
+function?<BR>&gt; <BR>&gt; thx btw :)<BR>&gt; <BR>&gt; oh, and is the=20
+ISR(TIMER2_OVF_vect) code doing anything??<BR>&gt; </DIV>
+<DIV><FONT color=3D#0000ff>All of the timer stuff was referenced from =
+that high=20
+speed ADC website (<A=20
+href=3D"http://www.byrote.org/arduino/">http://www.byrote.org/arduino/</A=
+>). He=20
+used the timers and an interrupt routine to trigger an AD collection =
+every 16=20
+microseconds. I am not. I just synchronously grab the data bytes as they =
+are=20
+available, with the conversion rate ultimately set by the ADPS*=20
+bits.</FONT></DIV>
+<DIV>&nbsp;<BR>&gt;&gt; Also I changed the SPI IRQ bit from PB6 to PB1 =
+(see that=20
+<BR>&gt;&gt; Arduino routine) (because a lot of Arduino PCB use PB6 as =
+an=20
+oscillator <BR>&gt;&gt; pin, and I wanted compatibility for the board I =
+am=20
+laying out.<BR>&gt; <BR>&gt; okay, we have them hardwired.. but i'll =
+make a=20
+define!<BR>&gt; <BR>&gt;&gt; I converted everything to C++, so I could =
+initially=20
+use floating point&nbsp; <BR>&gt;&gt; (which did not seem to be =
+supported in C=20
+in devkitPro.</DIV>
+<DIV><FONT color=3D#0000ff>The math.h&nbsp;file in C did not reference =
+any of the=20
+trig functions, hence I moved to CPP. Maybe I got a freak devkitpro=20
+build...</FONT><BR>&gt; <BR>&gt; hm, floating point does seem to work =
+for me..=20
+did you maybe try to use <BR>&gt; iprintf to output the values (cause =
+that's the=20
+lean version of printf <BR>&gt; not supporting floating point =
+output)?<BR>&gt;=20
+<BR>&gt; <BR>&gt; cheers,<BR>&gt; gottfried<BR>&gt;</FONT></DIV>
+<P><FONT face=3DArial size=3D2></FONT></P><FONT face=3DArial size=3D2>
+<HR>
+</FONT>
+<P></P><FONT face=3DArial size=3D2>&gt; #include=20
+&lt;Wire.h&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;=20
+// for i2c code<BR>&gt; <BR>&gt; #define VERSION=20
+0x08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // software =
+version=20
+(LSB 0..release, 1..devel)<BR>&gt; #define ADC_CNT=20
+384&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // =
+number of adc=20
+conversions we do<BR>&gt; <BR>&gt; #define SS=20
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;=20
+// PB2<BR>&gt; #define MOSI=20
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;=20
+// PB3<BR>&gt; #define MISO=20
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;=20
+// PB4<BR>&gt; #define SCK=20
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;=20
+// PB5<BR>&gt; <BR>&gt; boolean got_esc =3D =
+false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+// got escape character over spi<BR>&gt; boolean do_spi_next =3D =
+false;&nbsp; //=20
+next character to send is in spi_next<BR>&gt; boolean i2c_enabled =3D =
+false;&nbsp;=20
+// called Wire.begin()<BR>&gt; byte=20
+spi_next;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;=20
+// next character to send over spi<BR>&gt; // needed (?)<BR>&gt; =
+volatile byte=20
+badc0;<BR>&gt; volatile boolean f_sample;<BR>&gt; <BR>&gt; <BR>&gt; void =
+
+setup()<BR>&gt; {<BR>&gt;&nbsp; byte clr;<BR>&gt;&nbsp; <BR>&gt;&nbsp;=20
+Serial.begin(57600);<BR>&gt;&nbsp; <BR>&gt;&nbsp; // setup SPI=20
+interface<BR>&gt;&nbsp; pinMode(SS, INPUT);<BR>&gt;&nbsp; pinMode(MOSI,=20
+INPUT);<BR>&gt;&nbsp; pinMode(MISO, OUTPUT);<BR>&gt;&nbsp; pinMode(SCK,=20
+INPUT);<BR>&gt;&nbsp; <BR>&gt;&nbsp; // enable SPI interface, CPOL=3D1,=20
+CHPA=3D1<BR>&gt;&nbsp; SPCR =3D=20
+(1&lt;&lt;6)|(1&lt;&lt;3)|(1&lt;&lt;2);<BR>&gt;&nbsp; // dummy=20
+read<BR>&gt;&nbsp; clr =3D SPSR;<BR>&gt;&nbsp; clr =3D SPDR;<BR>&gt; =
+}<BR>&gt;=20
+<BR>&gt; <BR>&gt; void do_irq()<BR>&gt; {<BR>&gt;&nbsp; // raise a Card =
+Line=20
+hardware interrupt (PB6)<BR>&gt;&nbsp; DDRB |=3D (1 &lt;&lt; =
+6);<BR>&gt;&nbsp;=20
+PORTB &amp;=3D ~(1 &lt;&lt; 6);&nbsp;&nbsp;&nbsp; // low<BR>&gt;&nbsp; =
+PORTB |=3D (1=20
+&lt;&lt; 6);&nbsp;&nbsp;&nbsp;&nbsp; // high<BR>&gt;&nbsp; PORTB =
+&amp;=3D ~(1=20
+&lt;&lt; 6);&nbsp;&nbsp;&nbsp; // low&nbsp; <BR>&gt; }<BR>&gt; <BR>&gt; =
+<BR>&gt;=20
+byte spi_transfer(volatile byte out)<BR>&gt; {<BR>&gt;&nbsp; // send and =
+receive=20
+a character, blocking<BR>&gt;&nbsp; SPDR =3D out;<BR>&gt;&nbsp; while =
+(!(SPSR=20
+&amp; (1&lt;&lt;7)));<BR>&gt;&nbsp; return SPDR;<BR>&gt; }<BR>&gt; =
+<BR>&gt;=20
+<BR>&gt; void cmd_analog_read()<BR>&gt; {<BR>&gt;&nbsp; byte =
+pin;<BR>&gt;&nbsp;=20
+unsigned int val;<BR>&gt; <BR>&gt;&nbsp; pin =3D =
+spi_transfer(0x00);<BR>&gt;&nbsp;=20
+pinMode(pin, INPUT);<BR>&gt;&nbsp; val =3D =
+analogRead(pin);<BR>&gt;&nbsp; // wake=20
+up nds (might not be needed for adc, but a good test)<BR>&gt;&nbsp;=20
+do_irq();<BR>&gt;&nbsp; spi_transfer(val&gt;&gt;8);<BR>&gt;&nbsp;=20
+spi_transfer(val&amp;0xff);<BR>&gt; }<BR>&gt; <BR>&gt; <BR>&gt; // timer =
+
+2<BR>&gt; ISR(TIMER2_OVF_vect)<BR>&gt; {<BR>&gt;&nbsp; // is this all =
+needed=20
+(?)<BR>&gt;&nbsp; badc0 =3D ADCH;<BR>&gt;&nbsp; f_sample =3D =
+true;<BR>&gt;&nbsp;=20
+ADCSRA |=3D (1&lt;&lt;ADSC);<BR>&gt; }<BR>&gt; <BR>&gt; <BR>&gt; void=20
+cmd_analog_read_fast()<BR>&gt; {<BR>&gt;&nbsp; unsigned int =
+i;<BR>&gt;&nbsp;=20
+byte in, pin, val;<BR>&gt;&nbsp; byte state =3D 0;<BR>&gt;&nbsp; =
+<BR>&gt;&nbsp; //=20
+setup adc control and status register<BR>&gt;&nbsp; // 500kHz sampling =
+rate=20
+(8MHz/16)<BR>&gt;&nbsp; ADCSRA =3D =
+(1&lt;&lt;ADEN)|(1&lt;&lt;ADPS2);<BR>&gt;&nbsp;=20
+<BR>&gt;&nbsp; // &amp;0x0f is sanity check<BR>&gt;&nbsp; pin =3D=20
+spi_transfer(0x00)&amp;0x0f;<BR>&gt;&nbsp; <BR>&gt;&nbsp; // set adc =
+multiplexer=20
+selection register<BR>&gt;&nbsp; // adc data register is=20
+left-adjusted<BR>&gt;&nbsp; // AVCC with external capacitor at AREF pin=20
+(?)<BR>&gt;&nbsp; ADMUX =3D =
+(1&lt;&lt;ADLAR)|(1&lt;&lt;REFS0)|pin;<BR>&gt;&nbsp;=20
+<BR>&gt;&nbsp; // set timer/counter control register a<BR>&gt;&nbsp; // =
+using=20
+fast pwm (?)<BR>&gt;&nbsp; TCCR2A =3D=20
+(1&lt;&lt;COM2A1)|(1&lt;&lt;WGM21)|(1&lt;&lt;WGM20);<BR>&gt;&nbsp; // =
+set=20
+timer/counter control register b<BR>&gt;&nbsp; // no =
+prescaling<BR>&gt;&nbsp;=20
+TCCR2B =3D (1&lt;&lt;CS20);<BR>&gt;&nbsp; <BR>&gt;&nbsp; // set =
+timer/counter 0=20
+interrupt mask register<BR>&gt;&nbsp; // disables delay() =
+(?)<BR>&gt;&nbsp;=20
+TIMSK0 =3D 0;<BR>&gt;&nbsp; // set timer/counter 1 interrupt mask=20
+register<BR>&gt;&nbsp; TIMSK1 =3D 0;<BR>&gt;&nbsp; <BR>&gt;&nbsp; // =
+read a few=20
+samples to prime the adc<BR>&gt;&nbsp; // start the =
+conversion<BR>&gt;&nbsp;=20
+ADCSRA |=3D (1&lt;&lt;ADSC);<BR>&gt;&nbsp; for (i=3D0; i&lt;8; i++)=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp; // wait until =
+complete<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+while (ADCSRA&amp;(1&lt;&lt;ADSC));<BR>&gt;&nbsp;&nbsp;&nbsp; // dummy=20
+read<BR>&gt;&nbsp;&nbsp;&nbsp; val =3D ADCH;<BR>&gt;&nbsp;&nbsp;&nbsp; =
+// start=20
+the next conversion<BR>&gt;&nbsp;&nbsp;&nbsp; ADCSRA |=3D=20
+(1&lt;&lt;ADSC);<BR>&gt;&nbsp; }<BR>&gt;&nbsp; <BR>&gt;&nbsp; // loop =
+until we=20
+receive \F to stop<BR>&gt;&nbsp; do {<BR>&gt;&nbsp;&nbsp; // read analog =
+pin=20
+ADC_CNT times (?)<BR>&gt;&nbsp;&nbsp; for (i=3D0; i&lt;ADC_CNT; i++)=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp; while=20
+(ADCSRA&amp;(1&lt;&lt;ADSC));<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp; val =3D=20
+ADCH;<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp; ADCSRA |=3D=20
+(1&lt;&lt;ADSC);<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp; in =3D=20
+spi_transfer(val);<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp; // check spi=20
+input<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp; if (state =3D=3D 0 &amp;&amp; in =
+=3D=3D '\\')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; state =3D=20
+1;<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp; } else if (state =3D=3D 1 &amp;&amp; =
+in =3D=3D 'F')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; state =3D=20
+2;<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp; } else if (state =3D=3D 1)=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; state =3D=20
+0;<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp; }<BR>&gt;&nbsp;&nbsp; }<BR>&gt;&nbsp; =
+} while=20
+(state &lt; 2);<BR>&gt;&nbsp; <BR>&gt;&nbsp; // TODO: clean up<BR>&gt; =
+}<BR>&gt;=20
+<BR>&gt; <BR>&gt; void cmd_analog_write()<BR>&gt; {<BR>&gt;&nbsp; byte=20
+pin;<BR>&gt;&nbsp; byte val;<BR>&gt; <BR>&gt;&nbsp; pin =3D=20
+spi_transfer(0x00);<BR>&gt;&nbsp; val =3D =
+spi_transfer(0x00);<BR>&gt;&nbsp;=20
+pinMode(pin, OUTPUT);<BR>&gt;&nbsp; analogWrite(pin, val);<BR>&gt; =
+}<BR>&gt;=20
+<BR>&gt; <BR>&gt; void cmd_digital_read()<BR>&gt; {<BR>&gt;&nbsp; byte=20
+pin;<BR>&gt;&nbsp; int val;<BR>&gt;&nbsp; <BR>&gt;&nbsp; pin =3D=20
+spi_transfer(0x00);<BR>&gt;&nbsp; pinMode(pin, INPUT);<BR>&gt;&nbsp; val =
+=3D=20
+digitalRead(pin);<BR>&gt;&nbsp; if (val =3D=3D HIGH) =
+{<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+spi_transfer(0x01);<BR>&gt;&nbsp; } else {<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+spi_transfer(0x00);<BR>&gt;&nbsp; }<BR>&gt; }<BR>&gt; <BR>&gt; <BR>&gt; =
+void=20
+cmd_digital_write()<BR>&gt; {<BR>&gt;&nbsp; byte pin;<BR>&gt;&nbsp; byte =
+
+val;<BR>&gt;&nbsp; <BR>&gt;&nbsp; pin =3D =
+spi_transfer(0x00);<BR>&gt;&nbsp; val =3D=20
+spi_transfer(0x00);<BR>&gt;&nbsp; pinMode(pin, OUTPUT);<BR>&gt;&nbsp; if =
+(val =3D=3D=20
+0x01) {<BR>&gt;&nbsp;&nbsp;&nbsp; digitalWrite(pin, HIGH);<BR>&gt;&nbsp; =
+} else=20
+if (val =3D=3D 0x00) {<BR>&gt;&nbsp;&nbsp;&nbsp; digitalWrite(pin,=20
+LOW);<BR>&gt;&nbsp; }<BR>&gt; }<BR>&gt; <BR>&gt; <BR>&gt; void=20
+cmd_firmware_ver()<BR>&gt; {<BR>&gt;&nbsp; =
+spi_transfer(VERSION);<BR>&gt;=20
+}<BR>&gt; <BR>&gt; <BR>&gt; void cmd_hw_reset()<BR>&gt;=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp; // try to rest via=20
+watchdog<BR>&gt;&nbsp;&nbsp;&nbsp; WDTCSR =3D =
+_BV(WDE);<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+// if the bootloader supports it, the device =
+should<BR>&gt;&nbsp;&nbsp;&nbsp; //=20
+reset itself ~ 16ms later<BR>&gt; }<BR>&gt; <BR>&gt; <BR>&gt; void=20
+cmd_i2c_receive()<BR>&gt; {<BR>&gt;&nbsp; byte addr;<BR>&gt;&nbsp; byte=20
+len;<BR>&gt;&nbsp; byte ret;<BR>&gt;&nbsp; <BR>&gt;&nbsp; if =
+(!i2c_enabled)=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp; // join the i2c bus as=20
+master<BR>&gt;&nbsp;&nbsp;&nbsp; Wire.begin();<BR>&gt;&nbsp;&nbsp;&nbsp; =
+
+i2c_enabled =3D true;<BR>&gt;&nbsp; }<BR>&gt;&nbsp; addr =3D=20
+spi_transfer(0x00);<BR>&gt;&nbsp; len =3D =
+spi_transfer(0x00);<BR>&gt;&nbsp; ret =3D=20
+Wire.requestFrom(addr, len);<BR>&gt;&nbsp; // wake up nds, return number =
+of=20
+bytes read<BR>&gt;&nbsp; do_irq();<BR>&gt;&nbsp;=20
+spi_transfer(ret);<BR>&gt;&nbsp; // return expected number of=20
+bytes<BR>&gt;&nbsp; while (len !=3D 0) {<BR>&gt;&nbsp;&nbsp;&nbsp; if =
+(ret !=3D 0)=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+spi_transfer(Wire.receive());<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+ret--;<BR>&gt;&nbsp;&nbsp;&nbsp; } else =
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+// return dummy byte<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+spi_transfer(0x00);<BR>&gt;&nbsp;&nbsp;&nbsp; =
+}<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+len--;<BR>&gt;&nbsp; }<BR>&gt; }<BR>&gt; <BR>&gt; <BR>&gt; void=20
+cmd_i2c_send()<BR>&gt; {<BR>&gt;&nbsp; byte len;<BR>&gt;&nbsp; byte=20
+ret;<BR>&gt;&nbsp; <BR>&gt;&nbsp; if (!i2c_enabled) =
+{<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+// join the i2c bus as master<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+Wire.begin();<BR>&gt;&nbsp;&nbsp;&nbsp; i2c_enabled =3D =
+true;<BR>&gt;&nbsp;=20
+}<BR>&gt;&nbsp; =
+Wire.beginTransmission(spi_transfer(0x00));<BR>&gt;&nbsp; len =3D=20
+spi_transfer(0x00);<BR>&gt;&nbsp; while (len !=3D 0) =
+{<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+Wire.send(spi_transfer(0x00));<BR>&gt;&nbsp;&nbsp;&nbsp; =
+len--;<BR>&gt;&nbsp;=20
+}<BR>&gt;&nbsp; ret =3D Wire.endTransmission();<BR>&gt;&nbsp; // wake up =
+nds,=20
+return result<BR>&gt;&nbsp; do_irq();<BR>&gt;&nbsp; =
+spi_transfer(ret);<BR>&gt;=20
+}<BR>&gt; <BR>&gt; <BR>&gt; void cmd_reg_read_8()<BR>&gt; =
+{<BR>&gt;&nbsp;=20
+volatile byte *reg;<BR>&gt;&nbsp; <BR>&gt;&nbsp; reg =3D (volatile=20
+byte*)spi_transfer(0x00);<BR>&gt;&nbsp; spi_transfer(*reg);<BR>&gt; =
+}<BR>&gt;=20
+<BR>&gt; <BR>&gt; void cmd_reg_write_8()<BR>&gt; {<BR>&gt;&nbsp; =
+volatile byte=20
+*reg;<BR>&gt;&nbsp; <BR>&gt;&nbsp; reg =3D (volatile=20
+byte*)spi_transfer(0x00);<BR>&gt;&nbsp; *reg =3D =
+spi_transfer(0x00);<BR>&gt;=20
+}<BR>&gt; <BR>&gt; <BR>&gt; void cmd_set_bps()<BR>&gt; {<BR>&gt;&nbsp; =
+unsigned=20
+long bps;<BR>&gt;&nbsp; unsigned int bps_high, bps_low;<BR>&gt;&nbsp; =
+unsigned=20
+long bps_test =3D 57600;<BR>&gt;&nbsp; <BR>&gt;&nbsp; // shifting does =
+not work on=20
+arduino with &gt; 16-bit values<BR>&gt;&nbsp; bps_high =3D=20
+spi_transfer(0x00)&lt;&lt;8;<BR>&gt;&nbsp; bps_high |=3D=20
+spi_transfer(0x00);<BR>&gt;&nbsp; bps_low =3D=20
+spi_transfer(0x00)&lt;&lt;8;<BR>&gt;&nbsp; bps_low |=3D=20
+spi_transfer(0x00);<BR>&gt;&nbsp; bps =3D =
+bps_high*0x10000+bps_low;<BR>&gt;&nbsp;=20
+<BR>&gt;&nbsp; Serial.begin(bps);<BR>&gt; }<BR>&gt; <BR>&gt; <BR>&gt; =
+void=20
+loop()<BR>&gt; {<BR>&gt;&nbsp; byte serial_in;<BR>&gt;&nbsp; byte=20
+spi_in;<BR>&gt;&nbsp; <BR>&gt;&nbsp; if (do_spi_next)=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp; serial_in =3D =
+spi_next;<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+do_spi_next =3D false;<BR>&gt;&nbsp; } else if (Serial.available() &gt; =
+0)=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp; serial_in =3D =
+Serial.read();<BR>&gt;&nbsp;&nbsp;&nbsp;=20
+// escape null-bytes and blackslashes and 0xff<BR>&gt;&nbsp;&nbsp;&nbsp; =
+if=20
+(serial_in =3D=3D 0x00) {<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+serial_in =3D=20
+'\\';<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; spi_next =3D=20
+0x00;<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do_spi_next =3D=20
+true;<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (serial_in =3D=3D '\\')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; spi_next =3D=20
+'\\';<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do_spi_next =3D=20
+true;<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (serial_in =3D=3D 0xff)=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; serial_in =3D=20
+'\\';<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; spi_next =3D=20
+0xff;<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do_spi_next =3D=20
+true;<BR>&gt;&nbsp;&nbsp;&nbsp; }<BR>&gt;&nbsp; } else=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp; // send dummy byte<BR>&gt;&nbsp;&nbsp;&nbsp; =
+
+serial_in =3D 0x00;<BR>&gt;&nbsp; }<BR>&gt;&nbsp; <BR>&gt;&nbsp; // do=20
+spi<BR>&gt;&nbsp; spi_in =3D spi_transfer(serial_in);<BR>&gt;&nbsp; =
+<BR>&gt;&nbsp;=20
+if (got_esc) {<BR>&gt;&nbsp;&nbsp;&nbsp; got_esc =3D=20
+false;<BR>&gt;&nbsp;&nbsp;&nbsp; // handle escape=20
+characters<BR>&gt;&nbsp;&nbsp;&nbsp; if (spi_in =3D=3D 'a')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \a: analog=20
+read<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_analog_read();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D =
+'A')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \A: analog=20
+write<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_analog_write();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D =
+'b')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \b: set=20
+bps<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_set_bps();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D 'd')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \d: digital=20
+read<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_digital_read();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D =
+'D')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \D: digital=20
+write<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_digital_write();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D =
+'f')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \f: start fast=20
+adc<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_analog_read_fast();<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // (\F =
+stops=20
+it)<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D 'i')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \i: receive i2c=20
+data<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_i2c_receive();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D =
+'I')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \I: send i2c=20
+data<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_i2c_send();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D 'r')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \r: read from=20
+register<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_reg_read_8();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D =
+'R')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \R: write to=20
+register<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_reg_write_8();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D =
+'v')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \v: get firmware=20
+version<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_firmware_ver();<BR>&gt;&nbsp;&nbsp;&nbsp; } else if (spi_in =3D=3D =
+'x')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // \x: hardware=20
+reset<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+cmd_hw_reset();<BR>&gt;&nbsp;&nbsp;&nbsp; } else=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Serial.print(spi_in,=20
+BYTE);<BR>&gt;&nbsp;&nbsp;&nbsp; }<BR>&gt;&nbsp; } else if (spi_in =
+=3D=3D '\\')=20
+{<BR>&gt;&nbsp;&nbsp;&nbsp; got_esc =3D true;<BR>&gt;&nbsp; } else if =
+(spi_in !=3D=20
+0x00) {<BR>&gt;&nbsp;&nbsp;&nbsp; Serial.print(spi_in, =
+BYTE);<BR>&gt;&nbsp;=20
+}<BR>&gt; }<BR>&gt;</FONT></BODY></HTML>
+
+------=_NextPart_000_0009_01C9B5F9.3C681CB0--
+
+
+
