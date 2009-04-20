@@ -2,6 +2,8 @@
 
 * documentation: rename brut.c, uart.c to .cpp when working with c++ code
 
+* make libdsbrut a library (.a) -  see libdsbrut_lib.rar
+
 * implement gordos servo code (no problem now with irqs)
 
 * implement hardware flow control on atmega
@@ -26,7 +28,7 @@
 
 * implement setting of internal pull-up resistors for arbitrary pins
 
-* implement midi (see http://dsmi.tobw.net/), dmx?
+* implement midi (see http://dsmi.tobw.net/, dsbrut_midi.jpg), dmx?
 
 * make adcplot also support gpip inputs, data acquisition
 
