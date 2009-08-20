@@ -34,6 +34,8 @@ uint16 analog_read(uint8 pin)
 		msg[2] = 4;
 	} else if (pin == PC3) {
 		msg[2] = 3;
+	} else {
+		msg[2] = pin;
 	}
 	
 	// we wait for an irq after the 3rd byte (when the adc occurs)
@@ -47,6 +49,7 @@ uint16 analog_read(uint8 pin)
 
 void analog_read_fast(bool start, uint8 pin)
 {
+	// todo: needs more testing
 	uint8 msg[] = { '\\', 'f', 0x00 };
 	uint16 i;
 	
@@ -60,6 +63,8 @@ void analog_read_fast(bool start, uint8 pin)
 		msg[2] = 4;
 	} else if (pin == PC3) {
 		msg[2] = 3;
+	} else {
+		msg[2] = pin;
 	}
 	
 	if (start) {

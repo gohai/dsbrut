@@ -335,7 +335,8 @@ uint16 uart_read(uint8 *dest, uint16 size)
 	
 	if (in_size < read)
 		read = in_size;
-	memcpy(dest, in, read);
+	if (dest)
+		memcpy(dest, in, read);
 	
 	// move remaining in-buffer
 	memmove(in, in+read, in_size-read);

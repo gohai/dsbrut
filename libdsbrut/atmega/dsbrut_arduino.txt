@@ -1,20 +1,16 @@
 #include <Wire.h>             // for i2c code
 
-#define VERSION 0x09          // software version (LSB 0..release, 1..devel)
+#define VERSION 0x10          // software version (LSB 0..release, 1..devel)
 
 #define SS 10                 // PB2
 #define MOSI 11               // PB3
 #define MISO 12               // PB4
 #define SCK 13                // PB5
-// todo: define irq
 
 boolean got_esc = false;      // got escape character over spi
 boolean do_spi_next = false;  // next character to send is in spi_next
 boolean i2c_enabled = false;  // called Wire.begin()
 byte spi_next;                // next character to send over spi
-// todo: needed (?)
-//volatile byte badc0;
-//volatile boolean f_sample;
 
 
 void setup()
@@ -71,21 +67,12 @@ void cmd_analog_read()
 }
 
 
-// timer 2
-/*
-ISR(TIMER2_OVF_vect)
-{
-  // is this all needed (?)
-  badc0 = ADCH;
-  f_sample = true;
-  ADCSRA |= (1<<ADSC);
-}
-*/
-
-
 void cmd_analog_read_fast()
 {
-  // todo: credits (bill, http://www.byrote.org/arduino/)
+  // do fast analog/digital conversion
+  // code from Bill Dreschel
+  // see also http://www.byrote.org/arduino/
+  // todo: needs more testing
   byte i, in, pin, val;
   byte state = 0;
   
