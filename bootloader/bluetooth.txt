@@ -1,0 +1,22 @@
+Bluetooth
+
+
+Content
+
+1. Preparing modules for use with DS brut
+2. Debugging bluetooth connections
+
+
+1. Preparing modules for use with DS brut
+
+* connect via bluetooth (default pin is 1234, though it shouldn't be 
+  required)
+* send "$$$" (no CR) within the first couple of seconds, should return "CMD" (CRLF)
+* send "ST,255" (with CR) to enable continuous configuration, should return "AOK" (CRLF)
+* send "SU,57" (with CR) to change default baud rate, should return "AOK"
+* send "---" to quit command mode
+
+
+2. Debugging bluetooth connections
+
+If the LED is blinking the device isn't connected.

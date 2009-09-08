@@ -1,0 +1,23 @@
+hi bill,
+
+thanks for the messages! will test it myself asap, but if you want to play with it - i quickly implemented the code needed for starting/stopping the fast adc conversion, it's on the svn or if you take the latest library version from the page and add replace the files from the zip.
+
+should work like:
+
+analog_read_fast(true, PC5);
+
+then reading the bytes via uart_read() to a buffer
+(uart_available() gives you the number of bytes currently in the input queue)
+
+analog_read_fast(false, PC5);
+
+
+for setting the spi_rate there is uart_set_spi_rate(bps), not 100% sure that this code is doing the right thing though
+
+note that there is also the communication speed ot the spi interface itself, which is at the moment set to 524 kHz (the lowest value) in uart.c (via UART_SPI_SPEED) - but i think it wont be necessary to change this, but just if you hit a wall..
+
+
+will tweak this myself asap
+
+greetings,
+g

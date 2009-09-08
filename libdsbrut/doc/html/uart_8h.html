@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
   </div>
@@ -255,7 +256,7 @@ read from the uart device.<p>
 
 <p>
 read a line from the uart device.<p>
-this function returns all characters up (and including) the newline-characterr nl. the resulting string is null- terminated. <dl compact><dt><b>Parameters:</b></dt><dd>
+this function returns all characters up (and including) the newline-character. the resulting string is null- terminated. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>dest</em>&nbsp;</td><td>destination string </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>size of destination string (in bytes) </td></tr>
@@ -604,7 +605,7 @@ this function internally escapes null-bytes and backspace chars. <dl compact><dt
 
 <p>
 do a priority-write to the uart device.<p>
-the content of buf are added to the head of the output queue, and are guaranteed to fit in there (as other bytes are being descarded to make some room). the content is also not being escapted and the response to each byte stored in the dest buffer (which can be the same as buf). additionally, irq_bytes holds a bitmask for which bytes the library should way for an irq from the uart-device before reading in the next byte over spi. <dl compact><dt><b>Parameters:</b></dt><dd>
+the content of buf are added to the head of the output queue, and are guaranteed to fit in there (as other bytes are being descarded to make some room). the content is also not being escaped and the response to each byte stored in the dest buffer (which can be the same as buf). additionally, irq_bytes holds a bitmask for which bytes the library should way for an irq from the uart-device before reading in the next byte over spi. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>buf</em>&nbsp;</td><td>buffer </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>number of bytes to write </td></tr>

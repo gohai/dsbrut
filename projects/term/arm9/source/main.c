@@ -23,6 +23,7 @@
 #include <string.h>
 #include <time.h>
 // todo: there must be a better way to integrate libdsbrut here
+#include "bt.h"
 #include "uart.h"
 
 
@@ -56,8 +57,10 @@ int main(void)
 	iprintf("a .. enable/disable local echo\n");
 	iprintf("b .. cycle baud rates\n");
 	iprintf("x .. log input to file\n");
+	iprintf("y .. scan for bluetooth devices\n");
 	iprintf("left .. decrease spi rate\n");
-	iprintf("right .. increase spi rate\n\n");
+	iprintf("right .. increase spi rate\n");
+	iprintf("down .. show bluetooth state\n\n");
 	
 	// workaround
 	scanKeys();
@@ -100,9 +103,18 @@ int main(void)
 				if (out) {
 					iprintf("\nstarted logging (%s)..\n", fn);
 				} else {
-					iprintf("\ncould not log into %s.\n", fn);
+					iprintf("\ncould not log to %s.\n", fn);
 				}
 			}
+		} else if (keysDown() & KEY_Y) {
+			iprintf("\nscanning for devices.. ");
+			bt_device *list;
+			uint8 num = bt_scan(&list, 10);
+			uint8 i;
+			iprintf("%u found\n", num);
+			for (i=0; i<num; i++)
+				iprintf("%s %s %s\n", list[i].addr, list[i].name, list[i].cod);
+			iprintf("\n");
 		} else if (keysHeld() & KEY_L) {
 			if (spi_rate > 10) {
 				spi_rate -= 10;
@@ -115,6 +127,11 @@ int main(void)
 			iprintf("\nsetting spi to %u hz.. ", spi_rate);
 			uart_set_spi_rate(spi_rate);
 			iprintf("done\n");
+		} else if (keysDown() & KEY_DOWN) {
+			if (bt_connected())
+				iprintf("\nbluetooth: connected\n\n");
+			else
+				iprintf("\nbluetooth: not connected\n\n");
 		}
 		
 		// handle keyboard

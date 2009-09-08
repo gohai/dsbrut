@@ -28,7 +28,7 @@
 
 * implement setting of internal pull-up resistors for arbitrary pins
 
-* implement midi (see http://dsmi.tobw.net/, dsbrut_midi.jpg), dmx?
+* implement midi (see http://dsmi.tobw.net/, http://www.arduino.cc/playground/Main/MIDILibrary, dsbrut_midi.jpg), dmx?
 
 * make adcplot also support gpip inputs, data acquisition
 

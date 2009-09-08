@@ -1,0 +1,13 @@
+Hi all
+
+The timeout for the uart_init function is now set at 10 seconds and defined in the uart.c file. no more passing ints to the function or any of that
+
+After some testing i;ve also increased the default speed of the SPI to 2000 bps. I was finding that when sending alot of MIDI data that messages could get dropped and there was a degree of lag. I'm assuming that i was just sending data to the DSBrut too quickly and a buffer was over flowing. I dont know how high the SPI rate can be set but i found that with it set at 2000 my sequencer was able to send 16 channels of MIDI CC data at roughly 16 messages per beat as well as note on/off data and everything appeared fine.
+
+Let me know if there's anything that might still need work
+
+In other news, the sequencer i;ve been making is pretty much finished and I'm hoping to play a gig with it next friday. i'm going to have it hooked up to a sampler and a couple of synths and then be using whatever other noisy things i can get my hands on. If all goes well then ill be releasing it to the general public soon.
+
+all the best
+
+Guy

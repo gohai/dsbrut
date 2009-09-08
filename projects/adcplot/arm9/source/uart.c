@@ -396,10 +396,9 @@ uint16 uart_readln(char *dest, uint16 size, char nl)
 	dest[size] = '\0';
 	
 	// move remaining in-buffer
-	if (i+1 < in_size) {
+	if (i+1 < in_size)
 		memmove(in, in+i+1, in_size-i-1);
-		in_size -= i+1;
-	}
+	in_size -= i+1;
 	
 out:
 	unlock();
@@ -420,8 +419,8 @@ bool uart_requeue(uint8 *src, uint16 size)
 	// valid bytes while doing so
 	if (size+in_size <= UART_IN_SIZE+UART_IN_EMERG) {
 		memmove(in+size, in, in_size);
-		memcpy(out, src, size);
-		out_size += size;	
+		memcpy(in, src, size);
+		in_size += size;
 		unlock();
 		
 		return true;
