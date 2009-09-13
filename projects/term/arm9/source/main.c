@@ -58,8 +58,11 @@ int main(void)
 	iprintf("b .. cycle baud rates\n");
 	iprintf("x .. log input to file\n");
 	iprintf("y .. scan for bluetooth devices\n");
-	iprintf("left .. decrease spi rate\n");
-	iprintf("right .. increase spi rate\n");
+	//iprintf("left .. decrease spi rate\n");
+	//iprintf("right .. increase spi rate\n");
+	iprintf("left .. connect to gps\n");
+	iprintf("right .. connect to dummy device\n");
+	iprintf("up .. disconnect bluetooth\n");
 	iprintf("down .. show bluetooth state\n\n");
 	
 	// workaround
@@ -115,21 +118,41 @@ int main(void)
 			for (i=0; i<num; i++)
 				iprintf("%s %s %s\n", list[i].addr, list[i].name, list[i].cod);
 			iprintf("\n");
-		} else if (keysHeld() & KEY_L) {
+		// TODO: was keysHeld()
+		} else if (keysDown() & KEY_L) {
+			iprintf("\nconnecting to gps.. ");
+			if (bt_connect("000B0D852342"))
+				iprintf("success\n");
+			else
+				iprintf("error\n");
+			/*
 			if (spi_rate > 10) {
 				spi_rate -= 10;
 				iprintf("\nsetting spi to %u hz.. ", spi_rate);
 				uart_set_spi_rate(spi_rate);
 				iprintf("done\n");
 			}
-		} else if (keysHeld() & KEY_R) {
+			*/
+		// TODO: was keysHeld()
+		} else if (keysDown() & KEY_R) {
+			iprintf("\nconnecting to dummy device.. ");
+			if (bt_connect("001122334455"))
+				iprintf("success\n");
+			else
+				iprintf("error\n");
+			/*
 			spi_rate += 10;
 			iprintf("\nsetting spi to %u hz.. ", spi_rate);
 			uart_set_spi_rate(spi_rate);
 			iprintf("done\n");
+			*/
+		} else if (keysDown() & KEY_UP) {
+			iprintf("\ndisconnecting bluetooth.. ");
+			bt_disconnect();
+			iprintf("done\n");
 		} else if (keysDown() & KEY_DOWN) {
 			if (bt_connected())
-				iprintf("\nbluetooth: connected\n\n");
+				iprintf("\nbluetooth: connected\n");
 			else
 				iprintf("\nbluetooth: not connected\n\n");
 		}

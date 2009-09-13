@@ -11,11 +11,26 @@ typedef struct
 
 
 /**
+ *	connect to a device
+ *
+ *	@param addr		address (null-terminated string)
+ *	@return			true if successful, false if not
+ */
+bool bt_connect(const char *addr);
+
+
+/**
  *	return if the device is connected or not
  *
  *	@return			true if connected, false if not
  */
 bool bt_connected();
+
+
+/**
+ *	disconnect from the current connection
+ */
+void bt_disconnect();
 
 
 /**

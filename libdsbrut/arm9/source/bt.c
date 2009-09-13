@@ -44,9 +44,10 @@ void bt_finish_cmd()
 {
 	uint16 to_read;
 	
-	// check if there is anything left in in buffer now
+	// check if there is anything left in in-buffer now
 	to_read = uart_available();
 	// DEBUG
+	// TODO: remove
 	if (0 < to_read)
 		iprintf("\nbt: %u bytes remaining (%u)\n", to_read, __LINE__);
 	
@@ -90,6 +91,8 @@ bool bt_prepare_cmd()
 	// look for command string
 	start = bt_strstr_raw(keep, keep_size, (uint8*)"CMD\r\n");
 	if (!start) {
+		// DEBUG
+		// TODO: remove
 		iprintf("bt: invalid response (%u)\n", __LINE__);
 		// push back keep buffer
 		uart_requeue(keep, keep_size);
@@ -147,6 +150,54 @@ bool bt_wait(uint16 min_available, uint8 timeout)
 }
 
 
+bool bt_connect(const char *addr)
+{
+	char cmd[16];
+	char line[48];
+	time_t t;
+	
+	if (12 < strlen(addr))
+		return false;
+	
+	if (!bt_prepare_cmd())
+		return false;
+	
+	sprintf(cmd, "C,%s\r", addr);	
+	uart_send(cmd);
+	t = time(NULL);
+	
+	while (true) {
+		swiDelay(0);
+		if (uart_readln(line, sizeof(line), '\n')) {
+			// quit for certain messages
+			if (!strncmp(line, "CONNECT failed", 14)) {
+				bt_finish_cmd();
+				return false;
+			}
+			// ignore certain messages
+			if (!strncmp(line, "TRYING", 6))
+				continue;
+			// quit for everything else
+			// we are not in command mode anymore
+			// so push back the line we just read
+			uart_requeue((uint8*)line, strlen(line));
+			// and push back keep buffer
+			uart_requeue(keep, keep_size);
+			keep_size = 0;
+			return true;
+		}
+		// quit after some seconds
+		if (10 < time(NULL)-t) {
+			// we are hopefully not in command mode anymore
+			// so push back keep buffer
+			uart_requeue(keep, keep_size);
+			keep_size = 0;
+			return true;
+		}
+	}
+}
+
+
 bool bt_connected()
 {
 	uint8 ret[3];
@@ -157,6 +208,8 @@ bool bt_connected()
 	// send command
 	uart_send("GK\r");
 	if (!bt_wait(3, 1)) {
+		// DEBUG
+		// TODO: remove
 		iprintf("\nbt: invalid response (%u)\n", __LINE__);
 		bt_finish_cmd();
 		return false;
@@ -172,10 +225,22 @@ bool bt_connected()
 		return false;
 	} else {
 		// DEBUG
+		// TODO: remove
 		iprintf("\nbt: invalid response (%u)\n", __LINE__);
 		bt_finish_cmd();
 		return false;
 	}
+}
+
+
+void bt_disconnect()
+{
+	if (!bt_prepare_cmd())
+		return;
+	
+	uart_send("K,\r");
+	// TODO: needed?
+	bt_finish_cmd();
 }
 
 
