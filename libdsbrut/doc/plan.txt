@@ -1,4 +1,4 @@
-* test arduino reset, i2c
+* test i2c
 
 * documentation: rename brut.c, uart.c to .cpp when working with c++ code
 

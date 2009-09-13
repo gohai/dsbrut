@@ -27,7 +27,11 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbt__device.html">bt_device</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="bt_8h.html#b4515d2388cdc8c7b07d20da42f04c30">bt_connect</a> (const char *addr)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="bt_8h.html#f38dd4328af10f83ef70550a20eb98e7">bt_connected</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="bt_8h.html#b7b11487bbb75ad27d8a537fd388d484">bt_disconnect</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="bt_8h.html#d6e7be706eae09321de3f5a3a8d03968">bt_scan</a> (<a class="el" href="structbt__device.html">bt_device</a> **list, uint8 timeout)</td></tr>
 
@@ -35,6 +39,33 @@
 
 </table>
 <hr><h2>Function Documentation</h2>
+<a class="anchor" name="b4515d2388cdc8c7b07d20da42f04c30"></a><!-- doxytag: member="bt.h::bt_connect" ref="b4515d2388cdc8c7b07d20da42f04c30" args="(const char *addr)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool bt_connect           </td>
+          <td>(</td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>addr</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+connect to a device<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>addr</em>&nbsp;</td><td>address (null-terminated string) </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if successful, false if not </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="f38dd4328af10f83ef70550a20eb98e7"></a><!-- doxytag: member="bt.h::bt_connected" ref="f38dd4328af10f83ef70550a20eb98e7" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -53,6 +84,27 @@
 <p>
 return if the device is connected or not<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>true if connected, false if not </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="b7b11487bbb75ad27d8a537fd388d484"></a><!-- doxytag: member="bt.h::bt_disconnect" ref="b7b11487bbb75ad27d8a537fd388d484" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool bt_disconnect           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+disconnect from the current connection<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if successful, false if not </dd></dl>
 
 </div>
 </div><p>
