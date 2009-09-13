@@ -61,7 +61,7 @@ int main(void)
 	//iprintf("left .. decrease spi rate\n");
 	//iprintf("right .. increase spi rate\n");
 	iprintf("left .. connect to gps\n");
-	iprintf("right .. connect to dummy device\n");
+	iprintf("right .. connect to dummy\n");
 	iprintf("up .. disconnect bluetooth\n");
 	iprintf("down .. show bluetooth state\n\n");
 	
@@ -118,8 +118,8 @@ int main(void)
 			for (i=0; i<num; i++)
 				iprintf("%s %s %s\n", list[i].addr, list[i].name, list[i].cod);
 			iprintf("\n");
-		// TODO: was keysHeld()
-		} else if (keysDown() & KEY_L) {
+		// TODO: was keysHeld(), _L
+		} else if (keysDown() & KEY_LEFT) {
 			iprintf("\nconnecting to gps.. ");
 			if (bt_connect("000B0D852342"))
 				iprintf("success\n");
@@ -133,9 +133,9 @@ int main(void)
 				iprintf("done\n");
 			}
 			*/
-		// TODO: was keysHeld()
-		} else if (keysDown() & KEY_R) {
-			iprintf("\nconnecting to dummy device.. ");
+		// TODO: was keysHeld(), _R
+		} else if (keysDown() & KEY_RIGHT) {
+			iprintf("\nconnecting to dummy.. ");
 			if (bt_connect("001122334455"))
 				iprintf("success\n");
 			else
@@ -147,14 +147,16 @@ int main(void)
 			iprintf("done\n");
 			*/
 		} else if (keysDown() & KEY_UP) {
-			iprintf("\ndisconnecting bluetooth.. ");
-			bt_disconnect();
-			iprintf("done\n");
+			iprintf("\ndisconnecting bt.. ");
+			if (bt_disconnect())
+				iprintf("success\n");
+			else
+				iprintf("error\n");
 		} else if (keysDown() & KEY_DOWN) {
 			if (bt_connected())
 				iprintf("\nbluetooth: connected\n");
 			else
-				iprintf("\nbluetooth: not connected\n\n");
+				iprintf("\nbluetooth: not connected\n");
 		}
 		
 		// handle keyboard

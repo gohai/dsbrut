@@ -233,14 +233,47 @@ bool bt_connected()
 }
 
 
-void bt_disconnect()
+bool bt_disconnect()
 {
+	uint8 ret;
+	
 	if (!bt_prepare_cmd())
-		return;
+		return false;
 	
 	uart_send("K,\r");
-	// TODO: needed?
-	bt_finish_cmd();
+	if (!bt_wait(5, 1)) {
+		// DEBUG
+		// TODO: remove
+		iprintf("\nbt: invalid response (%u)\n", __LINE__);
+		bt_finish_cmd();
+		return false;
+	}
+	
+	uart_read(&ret, 1);
+	if (ret == 'K') {
+		// successful
+		// dummy-read rest of the message
+		while (uart_available() < 5)
+			uart_wait();
+		uart_read(NULL, 5);
+		// we are not in command mode anymore
+		// push back keep buffer
+		uart_requeue(keep, keep_size);
+		keep_size = 0;
+		return true;
+	} else if (ret == 'E') {
+		// unsuccessful
+		// dummy-read rest of the message
+		uart_read(NULL, 4);
+		bt_finish_cmd();
+		return false;
+	} else {
+		// DEBUG
+		// TODO: remove
+		iprintf("\nbt: invalid response (%u)\n", __LINE__);
+		bt_finish_cmd();
+		return false;
+	}
 }
 
 

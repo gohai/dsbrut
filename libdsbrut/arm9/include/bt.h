@@ -29,8 +29,10 @@ bool bt_connected();
 
 /**
  *	disconnect from the current connection
+ *
+ *	@return			true if successful, false if not
  */
-void bt_disconnect();
+bool bt_disconnect();
 
 
 /**
