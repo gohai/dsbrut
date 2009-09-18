@@ -1,6 +1,6 @@
 #include <Wire.h>             // for i2c code
 
-#define VERSION 0x10          // software version (LSB 0..release, 1..devel)
+#define VERSION 0x11          // software version (LSB 0..release, 1..devel)
 
 #define SS 10                 // PB2
 #define MOSI 11               // PB3
@@ -177,6 +177,20 @@ void cmd_digital_write()
 }
 
 
+void cmd_fbus2_init()
+{
+  int i;
+  
+  Serial.begin(115200);
+  for (i=0; i<128; i++)
+    Serial.write((uint8_t)0x55);
+  delay(10);
+  
+  do_irq();
+  spi_transfer(0x00);
+}
+
+
 void cmd_firmware_ver()
 {
   spi_transfer(VERSION);
@@ -281,6 +295,50 @@ void cmd_set_bps()
 }
 
 
+void cmd_uart_block_write()
+{
+  byte out[32];
+  byte len;
+  byte i;
+
+  // read in
+  len = spi_transfer(0x00);
+  if (32 < len)
+    len = 32;
+  for (i=0; i<len; i++) {
+    out[i] = spi_transfer(0x00);
+  }
+  // output blocking
+  for (i=0; i<len; i++) {
+    Serial.write((uint8_t)out[i]);
+  }
+  // return number of bytes written
+  do_irq();
+  spi_transfer(len);
+}
+
+
+void cmd_uart_set_parity()
+{
+  byte par;
+
+  par = spi_transfer(0x00);
+  if (par == 'N' || par == 'n') {
+    // no parity (default)
+    UCSR0C &= ~_BV(5);
+    UCSR0C &= ~_BV(4);
+  } else if (par == 'E' || par == 'e') {
+    // even parity
+    UCSR0C |= _BV(5);
+    UCSR0C &= ~_BV(4);
+  } else if (par == 'O' || par == 'o') {
+    // odd parity
+    UCSR0C |= _BV(5);
+    UCSR0C |= _BV(4);
+  }
+}
+
+
 void loop()
 {
   byte serial_in;
@@ -340,12 +398,21 @@ void loop()
     } else if (spi_in == 'I') {
       // \I: send i2c data
       cmd_i2c_send();
+    } else if (spi_in == 'n') {
+      // \n: do nokia f-bus2 init
+      cmd_fbus2_init();
+    } else if (spi_in == 'p') {
+      // \p: set uart parity
+      cmd_uart_set_parity();
     } else if (spi_in == 'r') {
       // \r: read from register
       cmd_reg_read_8();
     } else if (spi_in == 'R') {
       // \R: write to register
       cmd_reg_write_8();
+    } else if (spi_in == 'u') {
+      // \u: blocking uart write
+      cmd_uart_block_write();
     } else if (spi_in == 'v') {
       // \v: get firmware version
       cmd_firmware_ver();

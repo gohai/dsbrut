@@ -311,6 +311,33 @@ void uart_sendc(char c)
 }
 
 
+uint16 uart_write_block(uint8 *buf, uint16 size)
+{
+	uint8 *msg;
+	uint8 ret;
+	
+	// limit size to hardware buffer
+	if (32 < size)
+		size = 32;
+	
+	msg = malloc(3+size+1);
+	if (!msg)
+		return 0;
+	msg[0] = '\\';
+	msg[1] = 'u';
+	msg[2] = size;
+	memcpy(msg+3, buf, size);
+	msg[2+size+1] = 0;
+	
+	uart_write_prio(msg, 3+size+1, msg, 0x01);
+	uart_wait_prio(1);
+	
+	ret = msg[2+size+1];
+	free(msg);
+	return ret;
+}
+
+
 void uart_flush()
 {
 	while (out_head < out_size) {
@@ -450,6 +477,16 @@ void uart_set_bps(uint32 bps)
 	msg[5] = (bps)&0xff;
 	
 	uart_write_prio(msg, 6, msg, 0x00);
+	uart_wait_prio(0);
+}
+
+
+void uart_set_parity(char par)
+{
+	uint8 msg[] = { '\\', 'p', 0x00 };
+	
+	msg[2] = (uint8)par;
+	uart_write_prio(msg, 3, msg, 0x00);
 	uart_wait_prio(0);
 }
 
