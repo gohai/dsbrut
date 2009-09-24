@@ -11,12 +11,16 @@ Content
 
 * connect via bluetooth (default pin is 1234, though it shouldn't be 
   required)
+* open terminal programm and set baudrate to 115200
 * send "$$$" (no CR) within the first couple of seconds, should return "CMD" (CRLF)
 * send "ST,255" (with CR) to enable continuous configuration, should return "AOK" (CRLF)
 * send "SU,57" (with CR) to change default baud rate, should return "AOK"
+* send "SN,dsbluetooth" (with CR) to change the device name
 * send "---" to quit command mode
 
 
 2. Debugging bluetooth connections
 
-If the LED is blinking the device isn't connected.
+If the LED is blinking (slow, once a second) the device isn't connected.
+If the LED is blinking (fast, 3 times a second) the device is connected.
+
