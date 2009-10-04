@@ -43,6 +43,20 @@ void uart_sendc(char c);
 
 
 /**
+ *	write the content of a buffer to the uart device as a block.
+ *
+ *	this function is useful if you have tight timing contraints. 
+ *	the function returns after the last byte has been send over the 
+ *	uart device.
+ *	@param buf		buffer
+ *	@param size		number of bytes to write (up to 32 bytes 
+ *				are currently supported)
+ *	@return 		number of bytes written
+ */
+uint16 uart_write_block(uint8 *buf, uint16 size);
+
+
+/**
  *	wait until all bytes have been written to the device.
  */
 void uart_flush();
@@ -121,6 +135,17 @@ void uart_wait();
  *	@param bps		baudrate (bytes per second)
  */
 void uart_set_bps(uint32 bps);
+
+
+/**
+ *	set the parity used for the uart device.
+ *
+ *	this function needs firmware version 0x11 or higher to work.
+ *	@param par		'n' (none, default), 
+ *				'e' (even), 
+ *				'o' (odd)
+ */
+void uart_set_parity(char par);
 
 
 /**

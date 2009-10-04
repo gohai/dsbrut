@@ -21,6 +21,9 @@
 #include <nds/bios.h>	// for swi_delay()
 #include <string.h>		// for memmove()
 #include <time.h>		// for time()
+#ifndef ARM9
+#include "time7.h"
+#endif	// ARM9
 #include "uart.h"
 #include "spi.h"
 
@@ -208,7 +211,7 @@ uint8 uart_init()
 #ifdef ARM9
 	REG_EXMEMCNT &= ~ARM7_OWNS_CARD;
 #else
-	REG_EXMEMCNT |= ARM7_OWNS_CARD;
+	REG_EXMEMSTAT |= ARM7_OWNS_CARD;
 #endif	// ARM9
 	
 	init_cardSPI();
@@ -313,16 +316,12 @@ void uart_sendc(char c)
 
 uint16 uart_write_block(uint8 *buf, uint16 size)
 {
-	uint8 *msg;
-	uint8 ret;
+	uint8 msg[3+32+1];
 	
 	// limit size to hardware buffer
 	if (32 < size)
 		size = 32;
 	
-	msg = malloc(3+size+1);
-	if (!msg)
-		return 0;
 	msg[0] = '\\';
 	msg[1] = 'u';
 	msg[2] = size;
@@ -332,9 +331,7 @@ uint16 uart_write_block(uint8 *buf, uint16 size)
 	uart_write_prio(msg, 3+size+1, msg, 0x01);
 	uart_wait_prio(1);
 	
-	ret = msg[2+size+1];
-	free(msg);
-	return ret;
+	return msg[2+size+1];
 }
 
 
@@ -573,8 +570,12 @@ void uart_write_prio(uint8 *buf, uint16 size, uint8 *dest, uint32 irq_bytes)
 
 bool uart_wait_prio(uint8 timeout)
 {
+#ifdef ARM9
 	time_t start = time(NULL);
-	
+#else
+	time_t start = time_arm7();
+#endif	// ARM9
+
 	// wait for sending to finish
 	do {
 		if (prio_head == prio_size) {
@@ -584,8 +585,12 @@ bool uart_wait_prio(uint8 timeout)
 			return true;
 		}
 		swiDelay(0);
+#ifdef ARM9
 	} while (timeout == 0 || time(NULL)-start <= timeout);
-	
+#else
+	} while (timeout == 0 || time_arm7()-start <= timeout);
+#endif
+
 	// we timed out, cleanup
 	lock();
 	out_head = prio_size;
