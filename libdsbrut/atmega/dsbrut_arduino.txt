@@ -1,6 +1,6 @@
 #include <Wire.h>             // for i2c code
 
-#define VERSION 0x11          // software version (LSB 0..release, 1..devel)
+#define VERSION 0x12          // software version (LSB 0..release, 1..devel)
 
 #define SS 10                 // PB2
 #define MOSI 11               // PB3
