@@ -6,6 +6,7 @@ Content
 1. .hex file descriptions
 2. Compiling your own bootloader
 3. Flashing bootloaders
+4. Updating the firmware
 
 
 
@@ -49,3 +50,10 @@ In case something doesn't work try setting the DIP switch on the usbasp for
 
 avrdude -c usbasp -p m168 -B 10 -i 10 -e -u -U lock:w:0x3f:m -U efuse:w:0x00:m -U hfuse:w:0xdd:m -U lfuse:w:0xe2:m
 avrdude -c usbasp -p m168 -i 10 -e -u -U flash:w:dsbrut_168.hex -U lock:w:0x0f:m
+
+
+4. Updating the firmware
+
+For updating the firmware (see libdsbrut/atmega/dsbrut_arduino.txt), we 
+recommend installing the improved HardwareSerial for Arduino 0017 before.
+see http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1242466935
