@@ -1,6 +1,6 @@
 #include <Wire.h>             // for i2c code
 
-#define VERSION 0x12          // software version (LSB 0..release, 1..devel)
+#define VERSION 0x13          // software version (LSB 0..release, 1..devel)
 
 #define SS 10                 // PB2
 #define MOSI 11               // PB3
@@ -174,6 +174,90 @@ void cmd_digital_write()
   } else if (val == 0x00) {
     digitalWrite(pin, LOW);
   }
+}
+
+
+void cmd_em4102_send()
+{
+  byte pin;
+  byte data[64] = { 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                0, 0, 0, 0, 1,
+                                0, 0, 0, 0, 1,
+                                0, 0, 0, 0, 1,
+                                0, 0, 0, 0, 1,
+                                0, 0, 0, 0, 1,
+                                0, 0, 0, 0, 1,
+                                0, 0, 0, 0, 1,
+                                0, 0, 0, 0, 1,
+                                0, 0, 0, 0, 1,
+                                0, 0, 0, 0, 1,
+                                1, 1, 1, 1, 0 };
+  byte in;
+  byte i;
+  
+  pin = spi_transfer(0x00);
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, LOW);
+  
+  // manufacturer id
+  in = spi_transfer(0x00);
+  for (i=0; i<4; i++) {
+    data[9+i] = (in>>(7-i))&0x01;
+    data[14+i] = (in>>(3-i))&0x01;
+  }
+  // data bit 0
+  in = spi_transfer(0x00);
+  for (i=0; i<4; i++) {
+    data[19+i] = (in>>(7-i))&0x01;
+    data[24+i] = (in>>(3-i))&0x01;
+  }
+  // data bit 1
+  in = spi_transfer(0x00);
+  for (i=0; i<4; i++) {
+    data[29+i] = (in>>(7-i))&0x01;
+    data[34+i] = (in>>(3-i))&0x01;
+  }
+  // data bit 2
+  in = spi_transfer(0x00);
+  for (i=0; i<4; i++) {
+    data[39+i] = (in>>(7-i))&0x01;
+    data[44+i] = (in>>(3-i))&0x01;
+  }
+  // data bit 3
+  in = spi_transfer(0x00);
+  for (i=0; i<4; i++) {
+    data[49+i] = (in>>(7-i))&0x01;
+    data[54+i] = (in>>(3-i))&0x01;
+  }
+  // calculate row parity
+  for (i=9; i<64; i+=5) {
+    data[i+4] = data[i] ^ data[i+1] ^ data[i+2] ^ data[i+3];
+  }
+  // calculate column parity
+  for (i=0; i<4; i++) {
+    data[59+i] = data[9+i] ^ data[14+1] ^ data[19+i] ^ data[24+i] ^ data [29+i] ^ data[34+i] ^ data[39+i] ^ data [44+i] ^ data[49+i] ^ data[54+i];
+  }
+  
+  // output
+  cli();
+  for (i=0; i<64; i++) {
+    if (data[i] == 1) {
+      digitalWrite(pin, LOW);
+    } else {
+      digitalWrite(pin, HIGH);
+    }
+    delayMicroseconds(256);
+    if (data[i] == 1) {
+      digitalWrite(pin, HIGH);
+    } else {
+      digitalWrite(pin, LOW);
+    }
+    delayMicroseconds(256);
+  }
+  sei();
+  
+  do_irq();
+  spi_transfer(0x00);
 }
 
 
@@ -388,6 +472,9 @@ void loop()
     } else if (spi_in == 'D') {
       // \D: digital write
       cmd_digital_write();
+    } else if (spi_in == 'E') {
+      // \E: send em4102 data
+      cmd_em4102_send();
     } else if (spi_in == 'f') {
       // \f: start fast adc
       cmd_analog_read_fast();

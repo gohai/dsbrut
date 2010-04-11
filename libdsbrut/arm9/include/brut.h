@@ -140,4 +140,7 @@ uint8 i2c_receive(uint8 addr, uint8 *dest, uint8 size);
 uint8 i2c_send(uint8 addr, const uint8 *src, uint8 size);
 
 
+bool em4102_send(uint8 pin, const uint8* data);
+
+
 #endif	// _BRUT_H_

@@ -234,3 +234,23 @@ uint8 i2c_send(uint8 addr, const uint8* src, uint8 size)
 	free(msg);
 	return ret;			// return result
 }
+
+
+bool em4102_send(uint8 pin, const uint8* data)
+{
+	uint8 msg[] = { '\\', 'E', 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+	
+	msg[2] = pin;
+	msg[3] = data[0];
+	msg[4] = data[1];
+	msg[5] = data[2];
+	msg[6] = data[3];
+	msg[7] = data[4];
+	
+	// we wait for an irq on the final byte (when the transmission occurs)
+	uart_write_prio(msg, 9, NULL, 0x01);
+	if (uart_wait_prio(5))
+		return true;
+	else
+		return false;
+}
