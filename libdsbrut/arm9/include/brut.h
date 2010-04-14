@@ -140,7 +140,18 @@ uint8 i2c_receive(uint8 addr, uint8 *dest, uint8 size);
 uint8 i2c_send(uint8 addr, const uint8 *src, uint8 size);
 
 
-bool em4102_send(uint8 pin, const uint8* data);
+/**
+ *	send an EM4102 sequence
+ *
+ *	data is expected to be five bytes. first byte holds the manufacturer 
+ *	id while the other ones hold the unique (card) id.
+ *	needs firmware version 0x13 or higher.
+ *	@param pin		pin to use (see pin definitions above)
+ *	@param data		data buffer (expected to be five bytes)
+ *	@param tries	number of consecutive times to send the sequence
+ *	@return			true if successful, false if not
+ */
+bool em4102_send(uint8 pin, const uint8* data, uint8 tries);
 
 
 #endif	// _BRUT_H_

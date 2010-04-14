@@ -194,10 +194,13 @@ void cmd_em4102_send()
                                 1, 1, 1, 1, 0 };
   byte in;
   byte i;
+  byte tries;
   
   pin = spi_transfer(0x00);
   pinMode(pin, OUTPUT);
   digitalWrite(pin, LOW);
+  
+  tries = spi_transfer(0x00);
   
   // manufacturer id
   in = spi_transfer(0x00);
@@ -235,24 +238,26 @@ void cmd_em4102_send()
   }
   // calculate column parity
   for (i=0; i<4; i++) {
-    data[59+i] = data[9+i] ^ data[14+1] ^ data[19+i] ^ data[24+i] ^ data [29+i] ^ data[34+i] ^ data[39+i] ^ data [44+i] ^ data[49+i] ^ data[54+i];
+    data[59+i] = data[9+i] ^ data[14+i] ^ data[19+i] ^ data[24+i] ^ data [29+i] ^ data[34+i] ^ data[39+i] ^ data [44+i] ^ data[49+i] ^ data[54+i];
   }
-  
+
   // output
   cli();
-  for (i=0; i<64; i++) {
-    if (data[i] == 1) {
-      digitalWrite(pin, LOW);
-    } else {
-      digitalWrite(pin, HIGH);
+  while (tries--) {
+    for (i=0; i<64; i++) {
+      if (data[i] == 1) {
+        digitalWrite(pin, LOW);
+      } else {
+        digitalWrite(pin, HIGH);
+      }
+      delayMicroseconds(252);
+      if (data[i] == 1) {
+        digitalWrite(pin, HIGH);
+      } else {
+        digitalWrite(pin, LOW);
+      }
+      delayMicroseconds(252);
     }
-    delayMicroseconds(256);
-    if (data[i] == 1) {
-      digitalWrite(pin, HIGH);
-    } else {
-      digitalWrite(pin, LOW);
-    }
-    delayMicroseconds(256);
   }
   sei();
   

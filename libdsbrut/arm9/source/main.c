@@ -31,9 +31,8 @@ int main(void)
 	uint8 old_touch_x = 0;
 	bool pins_high = false;
 	uint32 spi_rate;
-	//static char teststring[] = "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
+	static char teststring[] = "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
 	touchPosition touch;
-	uint8 i;
 	
 	consoleDemoInit();
 	
@@ -76,20 +75,10 @@ int main(void)
 		}
 		
 		if (keysDown() & KEY_A) {
-			iprintf("\nsending em4102 on PC5.. ");
-			for (i=0; i<32; i++) {
-				if (em4102_send(PC5, (uint8*)"\xff\xff\xff\xff\xff"))
-					iprintf("s");
-				else
-					iprintf("f");
-			}
-			iprintf("\n");
-			/*
 			iprintf("\nsending %u bytes.. ", strlen(teststring));
 			uart_send(teststring);
 			uart_flush();
 			iprintf("done\n");
-			*/
 		} else if (keysDown() & KEY_B) {
 			bps_list_index++;
 			if (bps_list_index == sizeof(bps_list)/sizeof(uint32)) {
