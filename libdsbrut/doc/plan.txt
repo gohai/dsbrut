@@ -4,8 +4,6 @@
 
 * make libdsbrut a library (.a) -  see libdsbrut_lib.rar
 
-* implement gordos servo code (no problem now with irqs)
-
 * implement hardware flow control on atmega
 
 * make more arduino-like functions use the new irq functionality instead 
@@ -24,7 +22,7 @@
 * when changing the uart baud rate we could automatically adjust the spi 
   rate to some sane value.
 
-* implement setting of parity mode, stop bits and character size (5-8)
+* implement setting of stop bits and character size (5-8)
 
 * implement setting of internal pull-up resistors for arbitrary pins
 
