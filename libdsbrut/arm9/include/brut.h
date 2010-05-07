@@ -141,6 +141,27 @@ uint8 i2c_send(uint8 addr, const uint8 *src, uint8 size);
 
 
 /**
+ *	detach a servo from a pin
+ *
+ *	@param pin		pin to use (see pin definitions above)
+ */
+void servo_detach(uint8 pin);
+
+
+/**
+ *	set a servo to a given position
+ *
+ *	DS brut only supports a finite number of servo objects. When 
+ *	exceeding this number this function will return false for commands 
+ *	to new pins. (Use servo_detach() to make room for new ones.)
+ *	@param pin		pin to use (see pin definitions above)
+ *	@param pos		position (normally 0 to 180)
+ *	@return			true if successful, false if not
+ */
+bool servo_set(uint8 pin, uint8 pos);
+
+
+/**
  *	send an EM4102 sequence
  *
  *	data is expected to be five bytes. first byte holds the manufacturer 

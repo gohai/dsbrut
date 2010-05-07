@@ -1,6 +1,8 @@
+#include <Servo.h>            // for servo code
 #include <Wire.h>             // for i2c code
 
-#define VERSION 0x13          // software version (LSB 0..release, 1..devel)
+#define VERSION 0x14          // software version (LSB 0..release, 1..devel)
+#define NUM_SERVOS 4          // number of servo objects
 
 #define SS 10                 // PB2
 #define MOSI 11               // PB3
@@ -11,6 +13,8 @@ boolean got_esc = false;      // got escape character over spi
 boolean do_spi_next = false;  // next character to send is in spi_next
 boolean i2c_enabled = false;  // called Wire.begin()
 byte spi_next;                // next character to send over spi
+Servo servos[NUM_SERVOS];
+byte servo_pins[NUM_SERVOS] = { 0 };
 
 
 void setup()
@@ -367,6 +371,55 @@ void cmd_reg_write_8()
 }
 
 
+void cmd_servo_detach()
+{
+  byte pin;
+  byte i;
+  
+  pin = spi_transfer(0x00);
+  for (i=0; i<NUM_SERVOS; i++) {
+    if (pin == servo_pins[i]) {
+      servos[i].detach();
+      servo_pins[i] = 0;
+    }
+  }
+}
+
+
+void cmd_servo_set()
+{
+  byte pin;
+  byte val;
+  byte i;
+  
+  pin = spi_transfer(0x00);
+  val = spi_transfer(0x00);
+  
+  // check if we already have a servo object for this pin
+  for (i=0; i<NUM_SERVOS; i++) {
+    if (pin == servo_pins[i]) {
+      servos[i].write(val);
+      spi_transfer(0x01);
+      return;
+    }
+  }
+  
+  // check if we have available slots for servo objects
+  for (i=0; i<NUM_SERVOS; i++) {
+    if (0 == servo_pins[i]) {
+      servos[i].attach(pin);
+      servo_pins[i] = pin;
+      servos[i].write(val);
+      spi_transfer(0x01);
+      return;
+    }
+  }
+  
+  // no servo objects available anymore
+  spi_transfer(0x00);
+}
+
+
 void cmd_set_bps()
 {
   unsigned long bps;
@@ -502,6 +555,12 @@ void loop()
     } else if (spi_in == 'R') {
       // \R: write to register
       cmd_reg_write_8();
+    } else if (spi_in == 's') {
+      // \s: detach servo
+      cmd_servo_detach();
+    } else if (spi_in == 'S') {
+      // \S: set servo
+      cmd_servo_set();
     } else if (spi_in == 'u') {
       // \u: blocking uart write
       cmd_uart_block_write();

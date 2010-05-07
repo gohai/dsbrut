@@ -236,6 +236,34 @@ uint8 i2c_send(uint8 addr, const uint8* src, uint8 size)
 }
 
 
+void servo_detach(uint8 pin)
+{
+	uint8 msg[] = { '\\', 's', 0x00 };
+	
+	msg[2] = pin;
+	uart_write_prio(msg, 3, NULL, 0);
+	uart_wait_prio(0);
+}
+
+
+bool servo_set(uint8 pin, uint8 pos)
+{
+	uint8 msg[] = { '\\', 'S', 0x00, 0x00, 0x00 };
+	
+	msg[2] = pin;
+	msg[3] = pos;
+	// last byte is for return value
+	uart_write_prio(msg, 5, msg, 0x00);
+	uart_wait_prio(0);
+	
+	if (msg[4]) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
 bool em4102_send(uint8 pin, const uint8* data, uint8 tries)
 {
 	uint8 msg[] = { '\\', 'E', 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };

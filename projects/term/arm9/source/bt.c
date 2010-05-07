@@ -20,6 +20,7 @@
 #include <nds.h>
 #include <stdio.h>			// only for DEBUG
 #include <string.h>
+#include <time.h>
 #include "bt.h"
 #include "uart.h"
 
