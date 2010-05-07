@@ -69,6 +69,12 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="brut_8h.html#cdbae8488c5b9577ccaa56938e6b5d73">i2c_send</a> (uint8 addr, const uint8 *src, uint8 size)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="brut_8h.html#299ca3b877d62569526654c5cf31aa8e">servo_detach</a> (uint8 pin)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="brut_8h.html#212577ca100149e206f7e51ddbfd84ea">servo_set</a> (uint8 pin, uint8 pos)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="brut_8h.html#2cfa4c9d12bf015345591580bcab1889">em4102_send</a> (uint8 pin, const uint8 *data, uint8 tries)</td></tr>
+
 </table>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="f4cc2866af9a3674feedf15a2bb2b540"></a><!-- doxytag: member="brut.h::ACCEL_X" ref="f4cc2866af9a3674feedf15a2bb2b540" args="" -->
@@ -503,6 +509,50 @@ set a pin either high or low.<p>
 
 </div>
 </div><p>
+<a class="anchor" name="2cfa4c9d12bf015345591580bcab1889"></a><!-- doxytag: member="brut.h::em4102_send" ref="2cfa4c9d12bf015345591580bcab1889" args="(uint8 pin, const uint8 *data, uint8 tries)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool em4102_send           </td>
+          <td>(</td>
+          <td class="paramtype">uint8&nbsp;</td>
+          <td class="paramname"> <em>pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8 *&nbsp;</td>
+          <td class="paramname"> <em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8&nbsp;</td>
+          <td class="paramname"> <em>tries</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+send an EM4102 sequence<p>
+data is expected to be five bytes. first byte holds the manufacturer id while the other ones hold the unique (card) id. needs firmware version 0x13 or higher. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>pin</em>&nbsp;</td><td>pin to use (see pin definitions above) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>data buffer (expected to be five bytes) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>tries</em>&nbsp;</td><td>number of consecutive times to send the sequence </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if successful, false if not </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="42583818f42d824fa133d448ed10a8bb"></a><!-- doxytag: member="brut.h::i2c_receive" ref="42583818f42d824fa133d448ed10a8bb" args="(uint8 addr, uint8 *dest, uint8 size)" -->
 <div class="memitem">
 <div class="memproto">
@@ -597,6 +647,69 @@ use PC4 as SDA and PC5 as SCL line. the device joins the i2c bus as master. addr
     <tr><td valign="top"></td><td valign="top"><em>255</em>&nbsp;</td><td>out of memory </td></tr>
   </table>
 </dl>
+
+</div>
+</div><p>
+<a class="anchor" name="299ca3b877d62569526654c5cf31aa8e"></a><!-- doxytag: member="brut.h::servo_detach" ref="299ca3b877d62569526654c5cf31aa8e" args="(uint8 pin)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void servo_detach           </td>
+          <td>(</td>
+          <td class="paramtype">uint8&nbsp;</td>
+          <td class="paramname"> <em>pin</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+detach a servo from a pin<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>pin</em>&nbsp;</td><td>pin to use (see pin definitions above) </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="212577ca100149e206f7e51ddbfd84ea"></a><!-- doxytag: member="brut.h::servo_set" ref="212577ca100149e206f7e51ddbfd84ea" args="(uint8 pin, uint8 pos)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool servo_set           </td>
+          <td>(</td>
+          <td class="paramtype">uint8&nbsp;</td>
+          <td class="paramname"> <em>pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8&nbsp;</td>
+          <td class="paramname"> <em>pos</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+set a servo to a given position<p>
+DS brut only supports a finite number of servo objects. When exceeding this number this function will return false for commands to new pins. (Use <a class="el" href="brut_8h.html#299ca3b877d62569526654c5cf31aa8e">servo_detach()</a> to make room for new ones.) <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>pin</em>&nbsp;</td><td>pin to use (see pin definitions above) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>pos</em>&nbsp;</td><td>position (normally 0 to 180) </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if successful, false if not </dd></dl>
 
 </div>
 </div><p>
