@@ -1,0 +1,34 @@
+
+# /bootloader/
+/bootloader/bin
+
+# /libdsbrut/arm7/
+/libdsbrut/arm7/build
+/libdsbrut/arm7/*.elf
+
+# /libdsbrut/arm9/
+/libdsbrut/arm9/build
+/libdsbrut/arm9/*.elf
+
+# /libdsbrut/doc/
+/libdsbrut/doc/*.exe
+/libdsbrut/doc/Thumbs.db
+
+# /libdsbrut/doc/html/
+/libdsbrut/doc/html/Thumbs.db
+
+# /projects/adcplot/arm7/
+/projects/adcplot/arm7/build
+/projects/adcplot/arm7/*.elf
+
+# /projects/adcplot/arm9/
+/projects/adcplot/arm9/build
+/projects/adcplot/arm9/*.elf
+
+# /projects/term/arm7/
+/projects/term/arm7/build
+/projects/term/arm7/*.elf
+
+# /projects/term/arm9/
+/projects/term/arm9/build
+/projects/term/arm9/*.elf
