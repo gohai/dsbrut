@@ -1,4 +1,8 @@
 
+*.s#?
+*.b#?
+*.l#?
+
 # /bootloader/
 /bootloader/bin
 
