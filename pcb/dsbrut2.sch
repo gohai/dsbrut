@@ -6382,6 +6382,11 @@ GPL v2</text>
 <wire x1="68.58" y1="149.86" x2="88.9" y2="149.86" width="0.1524" layer="91"/>
 <label x="83.82" y="149.86" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC3" gate="G$1" pin="PD4(XCK/T0)"/>
+<wire x1="157.48" y1="116.84" x2="175.26" y2="116.84" width="0.1524" layer="91"/>
+<label x="170.18" y="116.84" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="GBA6" class="0">
 <segment>
@@ -6423,6 +6428,11 @@ GPL v2</text>
 <wire x1="68.58" y1="144.78" x2="88.9" y2="144.78" width="0.1524" layer="91"/>
 <label x="83.82" y="144.78" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC3" gate="G$1" pin="PD5(T1)"/>
+<wire x1="157.48" y1="114.3" x2="175.26" y2="114.3" width="0.1524" layer="91"/>
+<label x="170.18" y="114.3" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="WR" class="0">
 <segment>
@@ -6447,6 +6457,11 @@ GPL v2</text>
 <wire x1="68.58" y1="139.7" x2="88.9" y2="139.7" width="0.1524" layer="91"/>
 <label x="83.82" y="139.7" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC3" gate="G$1" pin="PD6(AIN0)"/>
+<wire x1="157.48" y1="111.76" x2="175.26" y2="111.76" width="0.1524" layer="91"/>
+<label x="170.18" y="111.76" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="GBA8" class="0">
 <segment>
@@ -6458,6 +6473,11 @@ GPL v2</text>
 <pinref part="IC2" gate="C" pin="O"/>
 <wire x1="63.5" y1="45.72" x2="83.82" y2="45.72" width="0.1524" layer="91"/>
 <label x="76.2" y="45.72" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$1" gate="G$1" pin="P$8"/>
+<wire x1="210.82" y1="132.08" x2="195.58" y2="132.08" width="0.1524" layer="91"/>
+<label x="195.58" y="132.08" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="GBA9" class="0">
@@ -6471,12 +6491,22 @@ GPL v2</text>
 <wire x1="63.5" y1="20.32" x2="83.82" y2="20.32" width="0.1524" layer="91"/>
 <label x="76.2" y="20.32" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="U$1" gate="G$1" pin="P$9"/>
+<wire x1="210.82" y1="129.54" x2="195.58" y2="129.54" width="0.1524" layer="91"/>
+<label x="195.58" y="129.54" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="PD7" class="0">
 <segment>
 <pinref part="IC1" gate="G$1" pin="Q3"/>
 <wire x1="68.58" y1="134.62" x2="88.9" y2="134.62" width="0.1524" layer="91"/>
 <label x="83.82" y="134.62" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="IC3" gate="G$1" pin="PD7(AIN1)"/>
+<wire x1="157.48" y1="109.22" x2="175.26" y2="109.22" width="0.1524" layer="91"/>
+<label x="170.18" y="109.22" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="PC3" class="0">
@@ -6485,6 +6515,11 @@ GPL v2</text>
 <wire x1="43.18" y1="20.32" x2="25.4" y2="20.32" width="0.1524" layer="91"/>
 <label x="25.4" y="20.32" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC3" gate="G$1" pin="PC3(ADC3)"/>
+<wire x1="157.48" y1="142.24" x2="175.26" y2="142.24" width="0.1524" layer="91"/>
+<label x="170.18" y="142.24" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="PC1" class="0">
 <segment>
@@ -6492,12 +6527,22 @@ GPL v2</text>
 <wire x1="43.18" y1="71.12" x2="25.4" y2="71.12" width="0.1524" layer="91"/>
 <label x="25.4" y="71.12" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC3" gate="G$1" pin="PC1(ADC1)"/>
+<wire x1="157.48" y1="147.32" x2="175.26" y2="147.32" width="0.1524" layer="91"/>
+<label x="170.18" y="147.32" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="PC0" class="0">
 <segment>
 <pinref part="IC2" gate="A" pin="I"/>
 <wire x1="43.18" y1="96.52" x2="25.4" y2="96.52" width="0.1524" layer="91"/>
 <label x="25.4" y="96.52" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="IC3" gate="G$1" pin="PC0(ADC0)"/>
+<wire x1="157.48" y1="149.86" x2="175.26" y2="149.86" width="0.1524" layer="91"/>
+<label x="170.18" y="149.86" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="RD" class="0">
@@ -6533,6 +6578,11 @@ GPL v2</text>
 <wire x1="43.18" y1="45.72" x2="25.4" y2="45.72" width="0.1524" layer="91"/>
 <label x="25.4" y="45.72" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC3" gate="G$1" pin="PC2(ADC2)"/>
+<wire x1="157.48" y1="144.78" x2="175.26" y2="144.78" width="0.1524" layer="91"/>
+<label x="170.18" y="144.78" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="GBA31" class="0">
 <segment>
@@ -6556,13 +6606,6 @@ GPL v2</text>
 <pinref part="U$1" gate="G$1" pin="P$2"/>
 <wire x1="210.82" y1="147.32" x2="195.58" y2="147.32" width="0.1524" layer="91"/>
 <label x="195.58" y="147.32" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="GBA5" class="0">
-<segment>
-<pinref part="U$1" gate="G$1" pin="P$5"/>
-<wire x1="210.82" y1="139.7" x2="195.58" y2="139.7" width="0.1524" layer="91"/>
-<label x="195.58" y="139.7" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="MOSI" class="0">
