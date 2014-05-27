@@ -2590,6 +2590,14 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <text x="-2.54" y="-5.08" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
 <pin name="VSS" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
 </symbol>
+<symbol name="VDD">
+<wire x1="1.27" y1="-1.905" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
+<wire x1="0" y1="1.27" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-1.905" x2="0" y2="1.27" width="0.254" layer="94"/>
+<text x="-2.54" y="-2.54" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
+<pin name="VDD" x="0" y="-2.54" visible="off" length="short" direction="sup" rot="R90"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="VCC" prefix="P+">
@@ -2622,6 +2630,19 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
 <gates>
 <gate name="G$1" symbol="VSS" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="VDD" prefix="VDD">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="VDD" x="0" y="0"/>
 </gates>
 <devices>
 <device name="">
@@ -6253,6 +6274,7 @@ http://dangerousprototypes.com</description>
 <part name="R1" library="rcl" deviceset="R-EU_" device="M0805"/>
 <part name="VSS1" library="supply1" deviceset="VSS" device=""/>
 <part name="F1" library="dp_devices" deviceset="INDUCTOR" device="-L1812" value="F1"/>
+<part name="VDD1" library="supply1" deviceset="VDD" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -6292,6 +6314,7 @@ GPL v2</text>
 <instance part="F1" gate="L" x="195.58" y="149.86" smashed="yes">
 <attribute name="NAME" x="190.5" y="152.4" size="1.778" layer="95"/>
 </instance>
+<instance part="VDD1" gate="G$1" x="226.06" y="58.42" rot="R270"/>
 </instances>
 <busses>
 </busses>
@@ -6336,6 +6359,10 @@ GPL v2</text>
 <segment>
 <pinref part="F1" gate="L" pin="1"/>
 <wire x1="187.96" y1="149.86" x2="180.34" y2="149.86" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="VDD1" gate="G$1" pin="VDD"/>
+<wire x1="223.52" y1="58.42" x2="208.28" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PD1" class="0">
