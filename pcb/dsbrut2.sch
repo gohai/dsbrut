@@ -6252,7 +6252,7 @@ http://dangerousprototypes.com</description>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="M0805"/>
 <part name="VSS1" library="supply1" deviceset="VSS" device=""/>
-<part name="L1" library="dp_devices" deviceset="INDUCTOR" device="-L1812"/>
+<part name="F1" library="dp_devices" deviceset="INDUCTOR" device="-L1812" value="F1"/>
 </parts>
 <sheets>
 <sheet>
@@ -6289,7 +6289,7 @@ GPL v2</text>
 <instance part="GND3" gate="1" x="193.04" y="86.36" rot="R90"/>
 <instance part="R1" gate="G$1" x="170.18" y="86.36"/>
 <instance part="VSS1" gate="G$1" x="226.06" y="35.56" rot="R90"/>
-<instance part="L1" gate="L" x="195.58" y="149.86" smashed="yes">
+<instance part="F1" gate="L" x="195.58" y="149.86" smashed="yes">
 <attribute name="NAME" x="190.5" y="152.4" size="1.778" layer="95"/>
 </instance>
 </instances>
@@ -6334,7 +6334,7 @@ GPL v2</text>
 <label x="96.52" y="139.7" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="L1" gate="L" pin="1"/>
+<pinref part="F1" gate="L" pin="1"/>
 <wire x1="187.96" y1="149.86" x2="180.34" y2="149.86" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -6754,7 +6754,7 @@ GPL v2</text>
 <net name="N$1" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="P$1"/>
-<pinref part="L1" gate="L" pin="2"/>
+<pinref part="F1" gate="L" pin="2"/>
 <wire x1="210.82" y1="149.86" x2="203.2" y2="149.86" width="0.1524" layer="91"/>
 </segment>
 </net>
