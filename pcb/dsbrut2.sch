@@ -2582,6 +2582,14 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <text x="-2.54" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
 <pin name="GND" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
 </symbol>
+<symbol name="VSS">
+<wire x1="-1.27" y1="1.905" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="1.27" y2="1.905" width="0.254" layer="94"/>
+<wire x1="0" y1="-1.27" x2="1.27" y2="1.905" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="1.905" x2="0" y2="-1.27" width="0.254" layer="94"/>
+<text x="-2.54" y="-5.08" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
+<pin name="VSS" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="VCC" prefix="P+">
@@ -2601,6 +2609,19 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
 <gates>
 <gate name="1" symbol="GND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="VSS" prefix="VSS">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="VSS" x="0" y="0"/>
 </gates>
 <devices>
 <device name="">
@@ -6155,6 +6176,54 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="dp_devices">
+<description>Dangerous Prototypes Standard PCB sizes
+http://dangerousprototypes.com</description>
+<packages>
+<package name="L1812">
+<wire x1="1.25" y1="-1.65" x2="-1.25" y2="-1.65" width="0.1524" layer="51"/>
+<wire x1="1.25" y1="1.65" x2="-1.25" y2="1.65" width="0.1524" layer="51"/>
+<circle x="0" y="0" radius="1.6" width="0.1524" layer="51"/>
+<smd name="2" x="1.6" y="0" dx="2" dy="3.5" layer="1"/>
+<smd name="1" x="-1.6" y="0" dx="2" dy="3.5" layer="1"/>
+<text x="-2.5" y="2.125" size="1.27" layer="25" font="vector" ratio="10">&gt;NAME</text>
+<text x="-2.5" y="-3.375" size="1.27" layer="27" font="vector" ratio="10">&gt;VALUE</text>
+<rectangle x1="-2.25" y1="-1.65" x2="-1.25" y2="1.65" layer="51"/>
+<rectangle x1="1.25" y1="-1.65" x2="2.25" y2="1.65" layer="51"/>
+</package>
+</packages>
+<symbols>
+<symbol name="COIL">
+<wire x1="5.08" y1="0" x2="2.54" y2="0" width="0.2032" layer="94" curve="180"/>
+<wire x1="2.54" y1="0" x2="0" y2="0" width="0.2032" layer="94" curve="180"/>
+<wire x1="0" y1="0" x2="-2.54" y2="0" width="0.2032" layer="94" curve="180"/>
+<wire x1="-2.54" y1="0" x2="-5.08" y2="0" width="0.2032" layer="94" curve="180"/>
+<text x="-5.08" y="2.54" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="1" x="-7.62" y="0" visible="pad" length="short" direction="pas"/>
+<pin name="2" x="7.62" y="0" visible="pad" length="short" direction="pas" rot="R180"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="INDUCTOR" prefix="L">
+<description>Inductor</description>
+<gates>
+<gate name="L" symbol="COIL" x="0" y="0"/>
+</gates>
+<devices>
+<device name="-L1812" package="L1812">
+<connects>
+<connect gate="L" pin="1" pad="1"/>
+<connect gate="L" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -6182,6 +6251,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <part name="LED1" library="SparkFunEagle-6-6-07" deviceset="LED" device="0603"/>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="M0805"/>
+<part name="VSS1" library="supply1" deviceset="VSS" device=""/>
+<part name="L1" library="dp_devices" deviceset="INDUCTOR" device="-L1812"/>
 </parts>
 <sheets>
 <sheet>
@@ -6217,6 +6288,10 @@ GPL v2</text>
 <instance part="LED1" gate="G$1" x="180.34" y="86.36" rot="R90"/>
 <instance part="GND3" gate="1" x="193.04" y="86.36" rot="R90"/>
 <instance part="R1" gate="G$1" x="170.18" y="86.36"/>
+<instance part="VSS1" gate="G$1" x="226.06" y="35.56" rot="R90"/>
+<instance part="L1" gate="L" x="195.58" y="149.86" smashed="yes">
+<attribute name="NAME" x="190.5" y="152.4" size="1.778" layer="95"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -6231,11 +6306,6 @@ GPL v2</text>
 <pinref part="IC1" gate="G$1" pin="!RESET"/>
 <wire x1="43.18" y1="129.54" x2="25.4" y2="129.54" width="0.1524" layer="91"/>
 <label x="25.4" y="129.54" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="U$1" gate="G$1" pin="P$1"/>
-<wire x1="210.82" y1="149.86" x2="195.58" y2="149.86" width="0.1524" layer="91"/>
-<label x="195.58" y="149.86" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="IC3" gate="G$1" pin="VCC@2"/>
@@ -6262,6 +6332,10 @@ GPL v2</text>
 <pinref part="IC3" gate="G$1" pin="AREF"/>
 <wire x1="96.52" y1="142.24" x2="109.22" y2="142.24" width="0.1524" layer="91"/>
 <label x="96.52" y="139.7" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="L1" gate="L" pin="1"/>
+<wire x1="187.96" y1="149.86" x2="180.34" y2="149.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PD1" class="0">
@@ -6374,6 +6448,11 @@ GPL v2</text>
 <wire x1="185.42" y1="86.36" x2="190.5" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="LED1" gate="G$1" pin="C"/>
 <pinref part="GND3" gate="1" pin="GND"/>
+</segment>
+<segment>
+<wire x1="208.28" y1="35.56" x2="223.52" y2="35.56" width="0.1524" layer="91"/>
+<label x="208.28" y="33.02" size="1.778" layer="95" rot="R90"/>
+<pinref part="VSS1" gate="G$1" pin="VSS"/>
 </segment>
 </net>
 <net name="PD4" class="0">
@@ -6670,6 +6749,13 @@ GPL v2</text>
 <wire x1="175.26" y1="86.36" x2="177.8" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="LED1" gate="G$1" pin="A"/>
 <pinref part="R1" gate="G$1" pin="2"/>
+</segment>
+</net>
+<net name="N$1" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="P$1"/>
+<pinref part="L1" gate="L" pin="2"/>
+<wire x1="210.82" y1="149.86" x2="203.2" y2="149.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
