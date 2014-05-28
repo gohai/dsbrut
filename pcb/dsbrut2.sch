@@ -8978,13 +8978,13 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="LED1" library="SparkFunEagle-6-6-07" deviceset="LED" device="0603"/>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
-<part name="R1" library="rcl" deviceset="R-EU_" device="M0805"/>
+<part name="R1" library="rcl" deviceset="R-EU_" device="M0805" value="220r"/>
 <part name="VSS1" library="supply1" deviceset="VSS" device=""/>
 <part name="F1" library="dp_devices" deviceset="INDUCTOR" device="-L1812" value="F1"/>
 <part name="VDD1" library="supply1" deviceset="VDD" device=""/>
 <part name="Y1" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3"/>
-<part name="C1" library="rcl" deviceset="C-EU" device="C0603K"/>
-<part name="C2" library="rcl" deviceset="C-EU" device="C0603K"/>
+<part name="C1" library="rcl" deviceset="C-EU" device="C0603K" value="10pf"/>
+<part name="C2" library="rcl" deviceset="C-EU" device="C0603K" value="10pf"/>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 </parts>
@@ -9030,8 +9030,8 @@ GPL v2</text>
 <instance part="Y1" gate="G$1" x="104.14" y="129.54" rot="R90"/>
 <instance part="C1" gate="G$1" x="99.06" y="132.08" rot="R90"/>
 <instance part="C2" gate="G$1" x="99.06" y="127" rot="R90"/>
-<instance part="GND2" gate="1" x="93.98" y="132.08" rot="R270"/>
-<instance part="GND4" gate="1" x="93.98" y="127" rot="R270"/>
+<instance part="GND2" gate="1" x="91.44" y="132.08" rot="R270"/>
+<instance part="GND4" gate="1" x="91.44" y="127" rot="R270"/>
 </instances>
 <busses>
 </busses>
@@ -9080,6 +9080,7 @@ GPL v2</text>
 <segment>
 <pinref part="VDD1" gate="G$1" pin="VDD"/>
 <wire x1="223.52" y1="58.42" x2="208.28" y2="58.42" width="0.1524" layer="91"/>
+<label x="205.74" y="60.96" size="1.778" layer="95" rot="R270"/>
 </segment>
 </net>
 <net name="PD1" class="0">
@@ -9201,10 +9202,12 @@ GPL v2</text>
 <segment>
 <pinref part="C1" gate="G$1" pin="1"/>
 <pinref part="GND2" gate="1" pin="GND"/>
+<wire x1="93.98" y1="132.08" x2="96.52" y2="132.08" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C2" gate="G$1" pin="1"/>
 <pinref part="GND4" gate="1" pin="GND"/>
+<wire x1="93.98" y1="127" x2="96.52" y2="127" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PD4" class="0">
@@ -9484,6 +9487,7 @@ GPL v2</text>
 <segment>
 <pinref part="IC3" gate="G$1" pin="PC6(/RESET)"/>
 <wire x1="109.22" y1="149.86" x2="96.52" y2="149.86" width="0.1524" layer="91"/>
+<label x="96.52" y="149.86" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="TP5" gate="G$1" pin="TP"/>
