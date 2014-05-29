@@ -122,7 +122,7 @@ Gottfried Haider &amp; Gordan Savicic
 <text x="28.41625" y="37.1475" size="0.6096" layer="25" rot="SR180" align="center">PB1</text>
 <text x="30.95625" y="37.1475" size="0.6096" layer="25" rot="SR180" align="center">PB2</text>
 <rectangle x1="0" y1="0" x2="48.895" y2="6.0325" layer="42"/>
-<text x="33.8566375" y="11.192525" size="0.6096" layer="25" rot="R180">GBA2</text>
+<text x="33.8566375" y="11.192525" size="0.6096" layer="25" rot="R180">GBA PHI</text>
 <wire x1="32.3684875" y1="13.8557" x2="32.3684875" y2="11.3157" width="0.2" layer="25" style="shortdash"/>
 <wire x1="32.3684875" y1="11.3157" x2="33.6384875" y2="11.3157" width="0.2" layer="25" style="shortdash"/>
 <wire x1="33.6384875" y1="11.3157" x2="33.6384875" y2="13.8557" width="0.2" layer="25" style="shortdash"/>
@@ -2370,10 +2370,10 @@ design rules under a new name.</description>
 <elements>
 <element name="IC1" library="40xx" package="SO16" value="4175D" x="9.04875" y="18.415" smashed="yes" rot="R270">
 <attribute name="VALUE" x="9.04875" y="18.3515" size="0.8128" layer="27" ratio="10" rot="R270" align="center"/>
-<attribute name="NAME" x="7.852728125" y="23.745178125" size="0.8128" layer="25" ratio="10"/>
+<attribute name="NAME" x="8.328978125" y="23.745178125" size="0.8128" layer="25" ratio="10"/>
 </element>
 <element name="IC2" library="74xx-eu" package="SO14" value="74HC125D" x="22.86" y="17.93875" smashed="yes" rot="R270">
-<attribute name="NAME" x="22.2266125" y="22.578071875" size="0.8128" layer="25" ratio="10"/>
+<attribute name="NAME" x="22.0678625" y="22.578071875" size="0.8128" layer="25" ratio="10"/>
 </element>
 <element name="JP1" library="SparkFun-Connectors" package="1X08_LONGPADS" value="" x="15.686540625" y="34.56710625" smashed="yes">
 <attribute name="VALUE" x="14.416540625" y="30.75710625" size="1.27" layer="27"/>
@@ -2406,7 +2406,7 @@ design rules under a new name.</description>
 <attribute name="TP_SIGNAL_NAME" value="" x="43.4975" y="16.35125" size="1" layer="38" rot="MR0"/>
 </element>
 <element name="LED1" library="SparkFunEagle-6-6-07" package="LED-0603" value="" x="46.99" y="25.24125" smashed="yes" rot="R90">
-<attribute name="NAME" x="47.310040625" y="24.770078125" size="0.6096" layer="25" rot="R180"/>
+<attribute name="NAME" x="48.103790625" y="24.770078125" size="0.6096" layer="25" rot="R180"/>
 <attribute name="VALUE" x="47.625" y="27.14625" size="1.27" layer="27" rot="R180"/>
 </element>
 <element name="R1" library="rcl" package="M0805" value="220r" x="46.83125" y="23.33625" smashed="yes">
@@ -2414,11 +2414,12 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="45.56125" y="20.79625" size="1.27" layer="27"/>
 </element>
 <element name="F1" library="dp_devices" package="L1812" value="F1" x="2.69875" y="22.70125" smashed="yes" rot="R270">
-<attribute name="VALUE" x="-0.04125" y="23.61375" size="0.8128" layer="27" font="vector" ratio="10" rot="R270"/>
+<attribute name="NAME" x="2.10375" y="25.46125" size="0.8128" layer="25" ratio="10"/>
+<attribute name="VALUE" x="-0.67625" y="25.20125" size="1.27" layer="27" font="vector" ratio="10" rot="R270"/>
 </element>
 <element name="Y1" library="SparkFun-FreqCtrl" package="CRYSTAL-SMD-5X3" value="" x="30.523178125" y="14.950440625" rot="R90"/>
 <element name="C1" library="rcl" package="C0603K" value="10pf" x="27.94" y="17.145" smashed="yes" rot="R270">
-<attribute name="NAME" x="28.59" y="18.58" size="0.6096" layer="25" rot="R270"/>
+<attribute name="NAME" x="28.59" y="18.73875" size="0.6096" layer="25" rot="R270"/>
 <attribute name="VALUE" x="26.29" y="17.945" size="1.016" layer="27" rot="R270"/>
 </element>
 <element name="C2" library="rcl" package="C0603K" value="10pf" x="33.900084375" y="13.21485" smashed="yes" rot="R180">
@@ -2426,7 +2427,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="34.700084375" y="14.86485" size="1.016" layer="27" rot="R180"/>
 </element>
 <element name="C3" library="rcl" package="SMC_A" value="" x="45.18786875" y="13.4645375" smashed="yes">
-<attribute name="NAME" x="44.22286875" y="11.8995375" size="0.8128" layer="25"/>
+<attribute name="NAME" x="44.69911875" y="12.0582875" size="0.6096" layer="25"/>
 <attribute name="VALUE" x="43.58786875" y="11.4645375" size="1.016" layer="27"/>
 </element>
 </elements>
@@ -2961,9 +2962,9 @@ design rules under a new name.</description>
 <wire x1="2.8575" y1="12.065" x2="4.1275" y2="13.335" width="0.4064" layer="16"/>
 <wire x1="4.1275" y1="13.335" x2="12.065" y2="13.335" width="0.4064" layer="16"/>
 <wire x1="12.065" y1="13.335" x2="14.44625" y2="10.95375" width="0.4064" layer="16"/>
-<via x="33.02635" y="11.917678125" extent="1-16" drill="0.6"/>
+<via x="33.02635" y="12.076428125" extent="1-16" drill="0.6"/>
 <wire x1="14.44625" y1="10.95375" x2="32.062421875" y2="10.95375" width="0.4064" layer="16"/>
-<wire x1="32.062421875" y1="10.95375" x2="33.02635" y2="11.917678125" width="0.4064" layer="16"/>
+<wire x1="32.062421875" y1="10.95375" x2="33.02635" y2="12.076428125" width="0.4064" layer="16"/>
 </signal>
 <signal name="MOSI">
 <contactref element="IC3" pad="15"/>
