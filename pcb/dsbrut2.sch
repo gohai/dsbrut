@@ -15421,7 +15421,7 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="LED1" library="SparkFunEagle-6-6-07" deviceset="LED" device="0603"/>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
-<part name="R1" library="rcl" deviceset="R-EU_" device="M0805" value="220"/>
+<part name="R1" library="rcl" deviceset="R-EU_" device="M0805" value="220R"/>
 <part name="VSS1" library="supply1" deviceset="VSS" device=""/>
 <part name="F1" library="dp_devices" deviceset="INDUCTOR" device="-L1812" value="F1"/>
 <part name="VDD1" library="supply1" deviceset="VDD" device=""/>
