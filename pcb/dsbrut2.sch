@@ -15426,13 +15426,13 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <part name="F1" library="dp_devices" deviceset="INDUCTOR" device="-L1812" value="F1"/>
 <part name="VDD1" library="supply1" deviceset="VDD" device=""/>
 <part name="Y1" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3" value="X1"/>
-<part name="C1" library="rcl" deviceset="C-EU" device="C0603K" value="18pF"/>
-<part name="C2" library="rcl" deviceset="C-EU" device="C0603K" value="18pF"/>
+<part name="C1" library="rcl" deviceset="C-EU" device="C0603K" value="8pF"/>
+<part name="C2" library="rcl" deviceset="C-EU" device="C0603K" value="8pF"/>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 <part name="P+2" library="supply1" deviceset="VCC" device=""/>
-<part name="C3" library="rcl" deviceset="CPOL-EU" device="SMCA"/>
+<part name="C3" library="rcl" deviceset="CPOL-EU" device="SMCA" value="10uF"/>
 </parts>
 <sheets>
 <sheet>
