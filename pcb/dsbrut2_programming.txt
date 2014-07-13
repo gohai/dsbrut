@@ -1,0 +1,18 @@
+Programming a DS Brut 2 with crystal
+./avrdude -C ../etc/avrdude.conf -c usbasp -p m328p -e
+./avrdude -C ../etc/avrdude.conf -c usbasp -p m328p -U lock:w:0x0f:m -U efuse:w:0x05:m -U hfuse:w:0xda:m -U lfuse:w:0xff:m -D
+./avrdude -C ../etc/avrdude.conf -c usbasp -p m328p -U flash:w:../../../arduino/bootloaders/atmega/ATmegaBOOT_168_atmega328.hex -i 10 -B 10
+
+Programming a DS Brut 2 without crystal
+./avrdude -C ../etc/avrdude.conf -c usbasp -p m328p -e
+./avrdude -C ../etc/avrdude.conf -c usbasp -p m328p -U flash:w:../../../arduino/bootloaders/atmega/ATmegaBOOT_168_atmega328.hex -i 10 -B 10
+./avrdude -C ../etc/avrdude.conf -c usbasp -p m328p -U lock:w:0x0f:m -U efuse:w:0x05:m -U hfuse:w:0xda:m -U lfuse:w:0xf0:m -D
+[not sure if -D is necessary]
+
+[Note: http://www.engbedded.com/fusecalc/ seems to output garbage for m328p]
+
+
+Uploading a sketch
+* connect board RX to Arduino-sans-uC RX, TX to TX
+* select e.g. Arduino Duemilanove w/ ATmega328 in Arduino IDE
+* turn NDS on when Arduino IDE prints "Uploading"
