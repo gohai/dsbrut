@@ -3,12 +3,11 @@
 10x MC74HC125ADGOS-ND
 10x MF-MSMF050-2CT-ND (500uA)
 10x MF-MSMF020-2CT-ND (200uA)
-10x 644-1194-1-ND 16 MHz
+10x 644-1194-1-ND 16 MHz (oriented to the right)
 20x 1276-2139-1-ND
 10x 478-8151-1-ND
 10x 1276-5515-1-ND
-10x 160-1436-1-ND (red)
+10x 160-1436-1-ND (red, cathode has protruding pad)
 5x 609-3321-ND (angled male)
 5x S5444-ND (angled female)
-5x 1212-1192-ND (angled female precision)
 1x ED10566-ND (screw terminal)
