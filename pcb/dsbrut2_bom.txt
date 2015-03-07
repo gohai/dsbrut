@@ -11,3 +11,5 @@
 5x 609-3321-ND (angled male)
 5x S5444-ND (angled female)
 1x ED10566-ND (screw terminal)
+
+TODO: goldplating
