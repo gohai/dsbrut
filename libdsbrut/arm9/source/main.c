@@ -84,7 +84,7 @@ int main(void)
 			if (bps_list_index == sizeof(bps_list)/sizeof(uint32)) {
 				bps_list_index = 0;
 			}
-			iprintf("\nsetting %u bps..", bps_list[bps_list_index]);
+			iprintf("\nsetting %lu bps..", bps_list[bps_list_index]);
 			uart_set_bps(bps_list[bps_list_index]);
 			iprintf("done\n");
 		} else if (keysDown() & KEY_X) {
@@ -125,13 +125,13 @@ int main(void)
 		} else if (keysHeld() & KEY_L) {
 			if (spi_rate > 10) {
 				spi_rate -= 10;
-				iprintf("\nsetting spi to %u hz.. ", spi_rate);
+				iprintf("\nsetting spi to %lu hz.. ", spi_rate);
 				uart_set_spi_rate(spi_rate);
 				iprintf("done\n");
 			}
 		} else if (keysHeld() & KEY_R) {
 			spi_rate += 10;
-			iprintf("\nsetting spi to %u hz.. ", spi_rate);
+			iprintf("\nsetting spi to %lu hz.. ", spi_rate);
 			uart_set_spi_rate(spi_rate);
 			iprintf("done\n");
 		}
