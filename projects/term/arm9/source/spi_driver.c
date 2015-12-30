@@ -54,15 +54,15 @@ init_cardSPI( void) {
  *
  * \param read_byte Pointer to the location to store the received byte.
  *
- * \return CARD_SPI_OK if the read was successful or CARD_SPI_BUSY if a transfer
+ * \return CARD_SPI_OK if the read was successful or _CARD_SPI_BUSY if a transfer
  * is in progress.
  */
 enum card_spi_return_code
 read_cardSPI( uint8_t *read_byte) {
-  enum card_spi_return_code ret_code = CARD_SPI_BUSY;
+  enum card_spi_return_code ret_code = _CARD_SPI_BUSY;
 
   if ( !CARD_SPI_BUSY_TEST) {
-    *read_byte = CARD_EEPDATA;
+    *read_byte = REG_AUXSPIDATA;
     ret_code = CARD_SPI_OK;
   }
 
@@ -85,7 +85,7 @@ enum card_spi_return_code
 readBlocking_cardSPI( uint8_t *read_byte) {
   CARD_SPI_WAIT_IDLE();
 
-  *read_byte = CARD_EEPDATA;
+  *read_byte = REG_AUXSPIDATA;
 
   return CARD_SPI_OK;
 }
@@ -99,26 +99,26 @@ readBlocking_cardSPI( uint8_t *read_byte) {
  *
  * \param byte The byte value to be sent out.
  *
- * \return CARD_SPI_OK if the write was successful or CARD_SPI_BUSY if
+ * \return CARD_SPI_OK if the write was successful or _CARD_SPI_BUSY if
  * the SPI bus is busy.
  */
 enum card_spi_return_code
 write_cardSPI( uint8_t byte) {
-  enum card_spi_return_code ret_code = CARD_SPI_BUSY;
+  enum card_spi_return_code ret_code = _CARD_SPI_BUSY;
 
   if ( !CARD_SPI_BUSY_TEST) {
     if ( driver.block_size > 1) {
       /* hold the chip select low after the transfer */
       driver.block_size -= 1;
 
-      CARD_CR1 = driver.config | CARD_SPI_CS_HOLD_BIT;
+      REG_AUXSPICNT = driver.config | CARD_SPI_CS_HOLD_BIT;
     }
     else {
       /* the chip select will be set high after the transfer */
-      CARD_CR1 = driver.config;
+      REG_AUXSPICNT = driver.config;
     }
 
-    CARD_EEPDATA = byte;
+    REG_AUXSPIDATA = byte;
     ret_code = CARD_SPI_OK;
   }
 
@@ -183,5 +183,5 @@ config_cardSPI( enum card_spi_clock_freq freq, int use_interrupts) {
  */
 void
 disable_cardSPI( void) {
-  CARD_CR1 = 0;
+  REG_AUXSPICNT = 0;
 }

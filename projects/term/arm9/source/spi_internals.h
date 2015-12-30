@@ -23,7 +23,7 @@
 
 
 /** Test if the SPI bus is busy (0 is idle, non-zero busy)*/
-#define CARD_SPI_BUSY_TEST (CARD_CR1 & CARD_SPI_BUSY_BIT)
+#define CARD_SPI_BUSY_TEST (REG_AUXSPICNT & CARD_SPI_BUSY_BIT)
 
 /** Wait for the SPI bus to become idle */
 #define CARD_SPI_WAIT_IDLE() while ( CARD_SPI_BUSY_TEST);

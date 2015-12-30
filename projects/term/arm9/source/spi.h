@@ -17,7 +17,7 @@ enum card_spi_return_code {
   CARD_SPI_OK = 0,
 
   /** The SPI bus is busy */
-  CARD_SPI_BUSY = 1
+  _CARD_SPI_BUSY = 1
 };
 
 /** \brief The SPI bus clock frequencies.
@@ -78,7 +78,7 @@ setupConsecutive_cardSPI( uint32_t num_bytes);
  *
  * \param read_byte Pointer to the location to store the received byte.
  *
- * \return CARD_SPI_OK if the read was successful or CARD_SPI_BUSY if a transfer
+ * \return CARD_SPI_OK if the read was successful or _CARD_SPI_BUSY if a transfer
  * is in progress.
  */
 enum card_spi_return_code
@@ -106,7 +106,7 @@ readBlocking_cardSPI( uint8_t *read_byte);
  *
  * \param byte The byte value to be sent out.
  *
- * \return CARD_SPI_OK if the write was successful or CARD_SPI_BUSY if
+ * \return CARD_SPI_OK if the write was successful or _CARD_SPI_BUSY if
  * the SPI bus is busy.
  */
 enum card_spi_return_code
